@@ -1,283 +1,552 @@
-:root{
-  --bg:#0b1020;
-  --card:#111a33;
-  --muted:#93a4c7;
-  --text:#eaf0ff;
-  --accent:#5aa7ff;
-  --accent2:#7cf7c6;
-  --border:rgba(255,255,255,.10);
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
-}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background: radial-gradient(1100px 550px at 15% 10%, rgba(90,167,255,.18), transparent 60%),
-              radial-gradient(900px 500px at 85% 0%, rgba(124,247,198,.12), transparent 55%),
-              var(--bg);
-  color:var(--text);
-  line-height:1.45;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  <title>Winnemucca NV Rentals | Apartments & Housing Availability</title>
+  <meta name="description" content="Winnemucca, NV rental availability. Learn how renting works locally, why availability changes quickly, and view demo listings showing how manager-updated rentals will appear." />
 
-a{color:inherit;text-decoration:none}
-a:hover{text-decoration:underline}
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#111a33;
+      --muted:#93a4c7;
+      --text:#eaf0ff;
+      --accent:#5aa7ff;
+      --accent2:#7cf7c6;
+      --border:rgba(255,255,255,.10);
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
 
-.container{max-width:1100px;margin:0 auto;padding:0 16px}
+    /* ===== HARD STOP: PREVENT “PAGE SHRINK/OFF” ===== */
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;padding:0;
+      width:100%;
+      max-width:100%;
+      overflow-x:hidden;
+    }
+    img,svg,video,canvas{
+      max-width:100%;
+      height:auto;
+      display:block;
+    }
 
-/* Mobile-first nav */
-.nav{
-  position:sticky; top:0; z-index:10;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: rgba(11,16,32,.78);
-  border-bottom:1px solid var(--border);
-}
-.nav-inner{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  justify-content:flex-start;
-  gap:10px;
-  padding:12px 0;
-}
-.brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.2px}
-.logo{
-  width:34px;height:34px;border-radius:10px;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  box-shadow: var(--shadow);
-}
-.nav-links{display:flex;gap:10px;flex-wrap:wrap}
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background: radial-gradient(1100px 550px at 15% 10%, rgba(90,167,255,.18), transparent 60%),
+                  radial-gradient(900px 500px at 85% 0%, rgba(124,247,198,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.45;
+    }
 
-/* Desktop nav */
-@media (min-width: 900px){
-  .nav-inner{flex-direction:row;align-items:center;justify-content:space-between}
-}
+    a{color:inherit;text-decoration:none}
+    a:hover{text-decoration:underline}
 
-.pill{
-  display:inline-flex;align-items:center;gap:8px;
-  border:1px solid var(--border);
-  background: rgba(255,255,255,.04);
-  padding:9px 12px;border-radius:999px;
-}
-.pill:hover{background: rgba(255,255,255,.07); text-decoration:none}
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 16px;
+      overflow-x:clip;
+    }
 
-.card{
-  background: rgba(17,26,51,.78);
-  border:1px solid var(--border);
-  border-radius:16px;
-  box-shadow: var(--shadow);
-}
-.card.pad{padding:16px}
+    /* NAV */
+    .nav{
+      position:sticky; top:0; z-index:10;
+      background:rgba(11,16,32,.80);
+      border-bottom:1px solid var(--border);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+    .nav-inner{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding:12px 0;
+      min-width:0;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      font-weight:900; letter-spacing:.2px;
+    }
+    .logo{
+      width:34px;height:34px;border-radius:10px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      box-shadow:var(--shadow);
+      flex:0 0 auto;
+    }
+    .nav-links{
+      display:flex;gap:8px;flex-wrap:wrap;
+      min-width:0;
+    }
+    @media (min-width: 900px){
+      .nav-inner{flex-direction:row;justify-content:space-between;align-items:center}
+    }
 
-/* Mobile-first hero */
-.hero{padding:26px 0 14px}
-.hero-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:14px;
-  align-items:stretch;
-}
-@media (min-width: 900px){
-  .hero{padding:56px 0 28px}
-  .hero-grid{grid-template-columns:1.3fr .7fr;gap:18px}
-  .card.pad{padding:22px}
-}
+    .pill{
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 12px;
+      background:rgba(255,255,255,.04);
+      white-space:nowrap;
+    }
+    .pill:hover{background:rgba(255,255,255,.07);text-decoration:none}
 
-h1{font-size:30px;line-height:1.08;margin:0 0 10px}
-@media (min-width: 520px){ h1{font-size:36px} }
-@media (min-width: 900px){ h1{font-size:40px} }
+    /* LAYOUT */
+    .section{padding:14px 0}
+    .hero{padding:18px 0 8px}
+    h1{margin:0 0 10px;font-size:32px;line-height:1.08}
+    h2{margin:0 0 10px;font-size:20px}
+    p{margin:0 0 10px}
+    .lead{color:var(--muted);font-size:15.5px}
 
-.lead{color:var(--muted);font-size:15.5px;margin:0 0 14px}
+    .card{
+      background:rgba(17,26,51,.78);
+      border:1px solid var(--border);
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      min-width:0;
+    }
+    .pad{padding:16px}
 
-.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:10px;
-  padding:12px 14px;border-radius:12px;
-  border:1px solid var(--border);
-  background: rgba(90,167,255,.16);
-  font-weight:700;
-}
-.btn.primary{background: linear-gradient(135deg, rgba(90,167,255,.24), rgba(124,247,198,.18))}
-.btn.secondary{background: rgba(255,255,255,.05)}
-.btn:hover{text-decoration:none;filter:brightness(1.06)}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;color:var(--muted);
+      padding:6px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+      max-width:100%;
+    }
 
-.section{padding:14px 0}
-@media (min-width: 900px){ .section{padding:18px 0} }
+    .hr{height:1px;background:var(--border);margin:16px 0}
 
-.grid3{display:grid;grid-template-columns:1fr;gap:12px}
-@media (min-width: 900px){ .grid3{grid-template-columns:repeat(3,1fr);gap:14px} }
+    /* LISTING */
+    #cards{
+      display:grid;
+      gap:12px;
+      min-width:0;
+    }
 
-h2{margin:0 0 10px;font-size:20px}
-@media (min-width: 900px){ h2{font-size:22px} }
+    /* PHOTO PREVIEW — SAFE (CAN’T OVERFLOW) */
+    .photo-preview{
+      width:100%;
+      max-width:100%;
+      overflow:hidden;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.20);
+    }
+    .photo-preview button{
+      all:unset;
+      display:block;
+      width:100%;
+      max-width:100%;
+      cursor:pointer;
+    }
+    .photo-preview img{
+      width:100%;
+      max-width:100%;
+      height:160px;
+      object-fit:cover;
+      display:block;
+    }
+    @media (min-width:650px){
+      .photo-preview img{height:200px}
+    }
 
-p{margin:0 0 10px}
+    /* MODAL — DOES NOT AFFECT PAGE FLOW */
+    .modal{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.85);
+      z-index:9999;
+      display:none;
+    }
+    .modal.open{display:block}
 
-.badge{
-  display:inline-flex;align-items:center;gap:8px;
-  font-size:12px;color:var(--muted);
-  padding:6px 10px;border-radius:999px;
-  border:1px solid var(--border);
-  background: rgba(255,255,255,.03);
-}
+    .modal-inner{
+      position:absolute;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding:14px;
+    }
+    .modal-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      min-width:0;
+    }
+    .modal-title{
+      font-weight:900;
+      font-size:14px;
+      opacity:.95;
+      color:var(--text);
+      min-width:0;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .modal-close{
+      width:40px;height:40px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.08);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;
+      user-select:none;
+      flex:0 0 auto;
+    }
+    .modal-stage{
+      flex:1;
+      border-radius:16px;
+      border:1px solid var(--border);
+      overflow:hidden;
+      background:rgba(0,0,0,.22);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:220px;
+    }
+    .modal-stage img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      background:rgba(0,0,0,.30);
+    }
+    .modal-nav{
+      display:flex;
+      gap:10px;
+    }
+    .modal-btn{
+      flex:1;
+      height:42px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:800;
+      cursor:pointer;
+    }
+    .modal-btn:hover{filter:brightness(1.06)}
+    .modal-counter{
+      min-width:110px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-.hr{height:1px;background:var(--border);margin:16px 0}
+    /* Footer */
+    .footer{padding:26px 0 44px;color:var(--muted)}
+  </style>
+</head>
 
-.form-row{display:grid;grid-template-columns:1fr;gap:10px}
-@media (min-width: 650px){ .form-row{grid-template-columns:1fr 1fr} }
+<body>
 
-input, select, textarea{
-  width:100%;
-  padding:12px 12px;border-radius:12px;
-  border:1px solid var(--border);
-  background: rgba(0,0,0,.18);
-  color:var(--text);
-  outline:none;
-}
-input::placeholder, textarea::placeholder{color: rgba(234,240,255,.45)}
-textarea{resize:vertical}
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="../">Local Rental Search</a>
+      </div>
+      <div class="nav-links">
+        <a class="pill" href="../">Home</a>
+        <a class="pill" href="#listings">Listings</a>
+        <a class="pill" href="#about">About</a>
+        <a class="pill" href="#managers">Managers</a>
+      </div>
+    </div>
+  </div>
 
-small{color:var(--muted)}
+  <header class="hero">
+    <div class="container">
+      <div class="card pad">
+        <span class="badge">Serving Winnemucca renters • Independent local platform</span>
+        <h1>Winnemucca, NV Rentals</h1>
+        <p class="lead">
+          A centralized platform designed to show rental availability in Winnemucca.
+          Listings will be updated directly by participating property managers.
+        </p>
+      </div>
+    </div>
+  </header>
 
-.kpi{display:grid;grid-template-columns:1fr;gap:10px}
-@media (min-width: 650px){ .kpi{grid-template-columns:1fr 1fr} }
-.kpi .mini{padding:14px;border-radius:14px;border:1px solid var(--border);background: rgba(255,255,255,.03)}
-.kpi .num{font-size:22px;font-weight:900}
-.kpi .lbl{color:var(--muted);font-size:13px;margin-top:2px}
+  <main class="container">
 
-.footer{padding:28px 0 44px;color:var(--muted)}
+    <section id="listings" class="section">
+      <div class="card pad">
+        <h2>Rental Listings</h2>
+        <p class="lead">
+          These are <strong>demo listings</strong> showing how real rentals will appear once property managers are onboarded.
+        </p>
 
-/* Status chips */
-.status{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:6px 10px;border-radius:999px;
-  border:1px solid var(--border);
-  font-size:12px;font-weight:700;
-  white-space:nowrap;
-}
-.dot{width:8px;height:8px;border-radius:50%}
-.available{background: rgba(124,247,198,.10)}
-.available .dot{background: var(--accent2)}
-.soon{background: rgba(90,167,255,.10)}
-.soon .dot{background: var(--accent)}
-.occupied{background: rgba(255,255,255,.06)}
-.occupied .dot{background: rgba(234,240,255,.45)}
+        <div id="cards"></div>
 
-/* Listing photo preview (used on cards) */
-.photo-preview{
-  width:100%;
-  border-radius:14px;
-  border:1px solid var(--border);
-  overflow:hidden;
-  background: rgba(0,0,0,.18);
-}
-.photo-preview button{
-  all: unset;
-  cursor: pointer;
-  display:block;
-  width:100%;
-}
-.photo-preview img{
-  width:100%;
-  height:170px;
-  object-fit:cover;
-  display:block;
-}
-@media (min-width: 650px){
-  .photo-preview img{ height:200px; }
-}
+        <div class="hr"></div>
+        <span class="badge">Demo listings • Real listings coming soon</span>
+      </div>
+    </section>
 
-/* Fullscreen gallery modal */
-.modal{
-  position:fixed;
-  inset:0;
-  background: rgba(0,0,0,.80);
-  z-index:9999;
-  display:none;
-}
-.modal.open{ display:block; }
+    <section id="about" class="section">
+      <div class="card pad">
+        <h2>How Renting Works in Winnemucca, NV</h2>
+        <p>
+          Winnemucca’s rental market is shaped by limited inventory and rapidly changing demand.
+          Many rentals are filled before they are widely advertised, and availability can change within days or even hours.
+        </p>
+        <p>
+          Renters often contact multiple property managers to confirm what is actually available.
+          Local Rental Search is being built to simplify that process by centralizing availability in one place.
+        </p>
+        <span class="badge">Local rental market overview • Winnemucca, Nevada</span>
+      </div>
+    </section>
 
-.modal-inner{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding:14px;
-}
+    <section class="section">
+      <div class="card pad">
+        <h2>Why Rental Availability Changes Quickly in Winnemucca</h2>
+        <ul>
+          <li>Limited number of apartment communities</li>
+          <li>Workforce housing tied to local industries</li>
+          <li>Short turnover windows between tenants</li>
+          <li>Decentralized property management offices</li>
+        </ul>
+        <p>
+          This platform is designed to reduce outdated listings by allowing property managers to update availability directly.
+        </p>
+        <span class="badge">Rental availability insights • Small-town housing</span>
+      </div>
+    </section>
 
-.modal-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
+    <section class="section">
+      <div class="card pad">
+        <h2>How Listings Are Updated on Local Rental Search</h2>
+        <p>
+          Listings on Local Rental Search are intended to be updated by participating property managers or their authorized representatives.
+        </p>
+        <p>
+          Until full participation is active, demo listings are shown to illustrate how units, photos, and availability will be displayed.
+        </p>
+        <span class="badge">Transparency notice • Manager-updated listings</span>
+      </div>
+    </section>
 
-.modal-title{
-  color: var(--text);
-  font-weight:800;
-  font-size:14px;
-  opacity:.95;
-}
+    <section id="managers" class="section">
+      <div class="card pad">
+        <h2>Property Managers in Winnemucca</h2>
+        <p class="lead">
+          Local Rental Search is being built to reduce repetitive inquiries and keep availability accurate.
+        </p>
+        <span class="badge">Page focus: Winnemucca, NV rentals • Content updated monthly</span>
+      </div>
+    </section>
 
-.modal-close{
-  width:42px;height:42px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background: rgba(255,255,255,.06);
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  user-select:none;
-}
-.modal-close:hover{ filter: brightness(1.08); }
+    <footer class="footer">
+      <div class="hr"></div>
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>© <span id="yr"></span> Local Rental Search</div>
+        <div>
+          <a href="../">Home</a> • <a href="#listings">Listings</a> • <a href="#about">About</a>
+        </div>
+      </div>
+    </footer>
 
-.modal-stage{
-  flex:1;
-  border-radius:16px;
-  border:1px solid var(--border);
-  overflow:hidden;
-  background: rgba(0,0,0,.25);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  position:relative;
-}
+  </main>
 
-.modal-stage img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  background: rgba(0,0,0,.35);
-}
+  <!-- FULLSCREEN GALLERY MODAL -->
+  <div class="modal" id="galleryModal" aria-hidden="true">
+    <div class="modal-inner">
+      <div class="modal-top">
+        <div class="modal-title" id="modalTitle">Photos</div>
+        <div class="modal-close" id="modalClose" role="button" aria-label="Close">X</div>
+      </div>
 
-.modal-nav{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
+      <div class="modal-stage" id="modalStage">
+        <img id="modalImg" alt="Listing photo" />
+      </div>
 
-.modal-btn{
-  flex:1;
-  height:44px;
-  border-radius:12px;
-  border:1px solid var(--border);
-  background: rgba(255,255,255,.06);
-  color: var(--text);
-  font-weight:800;
-  cursor:pointer;
-}
-.modal-btn:hover{ filter: brightness(1.08); }
-.modal-btn:disabled{ opacity:.35; cursor:not-allowed; }
+      <div class="modal-nav">
+        <button class="modal-btn" id="prevBtn" type="button">Prev</button>
+        <div class="modal-counter" id="modalCounter">1 / 1</div>
+        <button class="modal-btn" id="nextBtn" type="button">Next</button>
+      </div>
+    </div>
+  </div>
 
-.modal-counter{
-  min-width:120px;
-  text-align:center;
-  color:var(--muted);
-  font-size:13px;
-  font-weight:700;
-}
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Demo listings (picsum = safe placeholder images)
+    const listings = [
+      {
+        status: "Demo listing",
+        unit: "#12",
+        beds: "1",
+        rent: 1400,
+        address: "Example Apartment — Winnemucca, NV",
+        photos: [
+          "https://picsum.photos/seed/winnemucca-demo1/1200/800",
+          "https://picsum.photos/seed/winnemucca-demo2/1200/800",
+          "https://picsum.photos/seed/winnemucca-demo3/1200/800"
+        ]
+      }
+    ];
+
+    // Modal/gallery
+    const modal = document.getElementById('galleryModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalCounter = document.getElementById('modalCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const modalClose = document.getElementById('modalClose');
+    const modalStage = document.getElementById('modalStage');
+
+    let currentPhotos = [];
+    let currentIndex = 0;
+    let savedScrollY = 0;
+
+    function openModal(title, photos, startIndex){
+      savedScrollY = window.scrollY || 0;
+      currentPhotos = Array.isArray(photos) ? photos : [];
+      currentIndex = Math.max(0, Math.min(startIndex || 0, currentPhotos.length - 1));
+
+      modalTitle.textContent = title || "Photos";
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+
+      // lock background scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${savedScrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+
+      renderModal();
+    }
+
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+
+      // unlock scroll + restore position
+      const y = savedScrollY;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      window.scrollTo(0, y);
+    }
+
+    function renderModal(){
+      const total = currentPhotos.length || 0;
+      if(!total){
+        modalImg.removeAttribute('src');
+        modalCounter.textContent = `0 / 0`;
+        return;
+      }
+      modalImg.src = currentPhotos[currentIndex];
+      modalCounter.textContent = `${currentIndex + 1} / ${total}`;
+    }
+
+    function prev(){
+      if(currentPhotos.length <= 1) return;
+      currentIndex = (currentIndex - 1 + currentPhotos.length) % currentPhotos.length;
+      renderModal();
+    }
+
+    function next(){
+      if(currentPhotos.length <= 1) return;
+      currentIndex = (currentIndex + 1) % currentPhotos.length;
+      renderModal();
+    }
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+    modalClose.addEventListener('click', closeModal);
+
+    // close if tap outside overlay
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) closeModal();
+    });
+
+    // swipe support
+    let touchX = null;
+    modalStage.addEventListener('touchstart', (e) => {
+      touchX = e.changedTouches[0].clientX;
+    }, {passive:true});
+    modalStage.addEventListener('touchend', (e) => {
+      if(touchX === null) return;
+      const endX = e.changedTouches[0].clientX;
+      const dx = endX - touchX;
+      touchX = null;
+      if(Math.abs(dx) < 35) return;
+      if(dx > 0) prev(); else next();
+    }, {passive:true});
+
+    // Render cards
+    function renderCards(items){
+      const wrap = document.getElementById('cards');
+      wrap.innerHTML = "";
+
+      items.forEach((item, idx) => {
+        const cover = (item.photos && item.photos.length) ? item.photos[0] : "";
+
+        const card = document.createElement('div');
+        card.className = "card pad";
+        card.style.background = "rgba(255,255,255,.03)";
+        card.style.boxShadow = "none";
+
+        card.innerHTML = `
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;min-width:0">
+              <span class="badge">${item.status}</span>
+              <span class="badge">Unit: <strong>${item.unit}</strong></span>
+              <span class="badge">Beds: <strong>${item.beds}</strong></span>
+            </div>
+            <span class="badge">Rent: <strong>$${item.rent}/mo</strong></span>
+          </div>
+
+          <div style="margin-top:10px;min-width:0">
+            <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">Building / Area</div>
+            <div style="font-weight:900;word-break:break-word;">${item.address}</div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div style="color:var(--muted);font-size:12px;margin-bottom:6px;">Demo photos</div>
+            <div class="photo-preview">
+              <button type="button" data-open-gallery="${idx}" aria-label="Open photo gallery">
+                ${cover ? `<img src="${cover}" alt="Demo apartment photo" loading="lazy" />`
+                        : `<div style="padding:16px;color:var(--muted);">No photos yet</div>`}
+              </button>
+            </div>
+            <div style="margin-top:8px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+              <span class="badge">${(item.photos && item.photos.length) ? item.photos.length : 0} photo(s)</span>
+              <span class="badge">Tap to view full screen</span>
+            </div>
+          </div>
+        `;
+
+        wrap.appendChild(card);
+      });
+
+      wrap.querySelectorAll('[data-open-gallery]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = Number(btn.getAttribute('data-open-gallery'));
+          const item = items[i];
+          openModal(`${item.address} • Unit ${item.unit}`, item.photos || [], 0);
+        });
+      });
+    }
+
+    renderCards(listings);
+  </script>
+</body>
+</html>
