@@ -5,272 +5,308 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
   <title>Winnemucca NV Rentals | Apartments & Housing Availability</title>
-  <meta name="description" content="Winnemucca, NV rental availability. Learn how renting works locally, why listings change quickly, and view demo listings showing how manager-updated rentals will appear." />
+  <meta name="description" content="Winnemucca, NV rental availability. Learn how renting works locally, why availability changes quickly, and view demo listings showing how manager-updated rentals will appear." />
 
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
+
 <body>
 
-<!-- NAV -->
-<div class="nav">
-  <div class="container nav-inner">
-    <div class="brand">
-      <div class="logo"></div>
-      <a href="../">Local Rental Search</a>
-    </div>
-    <div class="nav-links">
-      <a class="pill" href="../">Home</a>
-      <a class="pill" href="#listings">Listings</a>
-      <a class="pill" href="#about">About</a>
-      <a class="pill" href="#managers">Managers</a>
-    </div>
-  </div>
-</div>
-
-<!-- HERO -->
-<header class="hero">
-  <div class="container">
-    <div class="card pad">
-      <span class="badge">Serving Winnemucca renters • Independent local platform</span>
-      <h1>Winnemucca, NV Rentals</h1>
-      <p class="lead">
-        A centralized platform designed to show rental availability in Winnemucca.
-        Listings will be updated directly by participating property managers.
-      </p>
-    </div>
-  </div>
-</header>
-
-<main class="container">
-
-<!-- LISTINGS -->
-<section id="listings" class="section">
-  <div class="card pad">
-    <h2>Rental Listings (Demo)</h2>
-    <p class="lead">
-      The listings below are demonstrations showing how real rentals will appear
-      once property managers are onboarded.
-    </p>
-
-    <div id="cards" style="display:grid;gap:12px;"></div>
-
-    <p class="badge">Demo listings • Real listings coming soon</p>
-  </div>
-</section>
-
-<!-- SEO: HOW RENTING WORKS -->
-<section class="section" id="about">
-  <div class="card pad">
-    <h2>How Renting Works in Winnemucca, NV</h2>
-
-    <p>
-      Winnemucca’s rental market is shaped by limited inventory and rapidly changing
-      demand. Many rentals are filled before they are widely advertised, and availability
-      can change within days or even hours.
-    </p>
-
-    <p>
-      Renters often need to contact multiple property managers to determine what is
-      actually available. Local Rental Search is being built to simplify that process
-      by centralizing availability information in one place.
-    </p>
-
-    <span class="badge">Local rental market overview • Winnemucca, Nevada</span>
-  </div>
-</section>
-
-<!-- SEO: AVAILABILITY -->
-<section class="section">
-  <div class="card pad">
-    <h2>Why Rental Availability Changes Quickly in Winnemucca</h2>
-
-    <ul>
-      <li>Limited number of apartment communities</li>
-      <li>Workforce housing tied to local industries</li>
-      <li>Short turnover windows between tenants</li>
-      <li>Decentralized property management offices</li>
-    </ul>
-
-    <p>
-      This platform is designed to reduce outdated listings by allowing property
-      managers to update availability directly.
-    </p>
-
-    <span class="badge">Rental availability insights • Small-town housing</span>
-  </div>
-</section>
-
-<!-- SEO: TRANSPARENCY -->
-<section class="section">
-  <div class="card pad">
-    <h2>How Listings Are Updated on Local Rental Search</h2>
-
-    <p>
-      Listings on Local Rental Search are intended to be updated by participating
-      property managers or their authorized representatives.
-    </p>
-
-    <p>
-      Until full participation is active, demo listings are shown to illustrate how
-      units, photos, and availability will be displayed.
-    </p>
-
-    <span class="badge">Transparency notice • Manager-updated listings</span>
-  </div>
-</section>
-
-<!-- MANAGERS -->
-<section id="managers" class="section">
-  <div class="card pad">
-    <h2>Property Managers in Winnemucca</h2>
-
-    <p class="lead">
-      Local Rental Search is being built to reduce repetitive inquiries and keep
-      availability accurate for Winnemucca rentals.
-    </p>
-
-    <p class="badge">
-      Page focus: Winnemucca, NV rentals • Content updated monthly
-    </p>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="hr"></div>
-  <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-    <div>© <span id="yr"></span> Local Rental Search</div>
-    <div>
-      <a href="../">Home</a> •
-      <a href="#listings">Listings</a> •
-      <a href="#about">About</a>
-    </div>
-  </div>
-</footer>
-
-</main>
-
-<!-- GALLERY MODAL -->
-<div class="modal" id="galleryModal">
-  <div class="modal-inner">
-    <div class="modal-top">
-      <div class="modal-title" id="modalTitle">Demo listing photos</div>
-      <div class="modal-close" id="modalClose">X</div>
-    </div>
-
-    <div class="modal-stage" id="modalStage">
-      <img id="modalImg" />
-    </div>
-
-    <div class="modal-nav">
-      <button class="modal-btn" id="prevBtn">Prev</button>
-      <div class="modal-counter" id="modalCounter">1 / 1</div>
-      <button class="modal-btn" id="nextBtn">Next</button>
-    </div>
-  </div>
-</div>
-
-<script>
-document.getElementById('yr').textContent = new Date().getFullYear();
-
-/* DEMO LISTINGS */
-const listings = [
-  {
-    status: "Demo",
-    unit: "#12",
-    beds: "1",
-    rent: 1400,
-    address: "Example Apartment — Winnemucca, NV",
-    photos: [
-      "https://picsum.photos/seed/winnemucca-demo1/1200/800",
-      "https://picsum.photos/seed/winnemucca-demo2/1200/800",
-      "https://picsum.photos/seed/winnemucca-demo3/1200/800"
-    ]
-  }
-];
-
-/* GALLERY LOGIC */
-const modal = document.getElementById('galleryModal');
-const modalImg = document.getElementById('modalImg');
-const modalTitle = document.getElementById('modalTitle');
-const modalCounter = document.getElementById('modalCounter');
-let currentPhotos = [];
-let currentIndex = 0;
-let scrollY = 0;
-
-function openModal(title, photos, index){
-  scrollY = window.scrollY;
-  currentPhotos = photos;
-  currentIndex = index;
-  modalTitle.textContent = title;
-  modal.classList.add('open');
-  document.body.style.position = 'fixed';
-  document.body.style.top = `-${scrollY}px`;
-  renderModal();
-}
-
-function closeModal(){
-  modal.classList.remove('open');
-  document.body.style.position = '';
-  document.body.style.top = '';
-  window.scrollTo(0, scrollY);
-}
-
-function renderModal(){
-  modalImg.src = currentPhotos[currentIndex];
-  modalCounter.textContent = `${currentIndex + 1} / ${currentPhotos.length}`;
-}
-
-document.getElementById('prevBtn').onclick = () => {
-  currentIndex = (currentIndex - 1 + currentPhotos.length) % currentPhotos.length;
-  renderModal();
-};
-document.getElementById('nextBtn').onclick = () => {
-  currentIndex = (currentIndex + 1) % currentPhotos.length;
-  renderModal();
-};
-document.getElementById('modalClose').onclick = closeModal;
-
-/* RENDER CARDS */
-function renderCards(){
-  const wrap = document.getElementById('cards');
-  wrap.innerHTML = '';
-
-  listings.forEach((item, idx) => {
-    const card = document.createElement('div');
-    card.className = 'card pad';
-    card.style.background = 'rgba(255,255,255,.03)';
-
-    card.innerHTML = `
-      <strong>${item.address}</strong><br>
-      Unit ${item.unit} • ${item.beds} bed • $${item.rent}/mo<br>
-      <span class="badge">Demo listing</span>
-
-      <div style="margin-top:10px;">
-        <div class="photo-preview">
-          <button type="button" data-open="${idx}">
-            <img src="${item.photos[0]}" alt="Demo apartment photo" />
-          </button>
-        </div>
-        <span class="badge" style="margin-top:6px;display:inline-block;">
-          ${item.photos.length} demo photos • Tap to view
-        </span>
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <a href="../">Local Rental Search</a>
       </div>
-    `;
+      <div class="nav-links">
+        <a class="pill" href="../">Home</a>
+        <a class="pill" href="#listings">Listings</a>
+        <a class="pill" href="#about">About</a>
+        <a class="pill" href="#managers">Managers</a>
+      </div>
+    </div>
+  </div>
 
-    wrap.appendChild(card);
-  });
+  <header class="hero">
+    <div class="container">
+      <div class="card pad">
+        <span class="badge">Serving Winnemucca renters • Independent local platform</span>
+        <h1>Winnemucca, NV Rentals</h1>
+        <p class="lead">
+          A centralized platform designed to show rental availability in Winnemucca.
+          Listings will be updated directly by participating property managers.
+        </p>
+      </div>
+    </div>
+  </header>
 
-  document.querySelectorAll('[data-open]').forEach(btn => {
-    btn.onclick = () => {
-      const i = btn.getAttribute('data-open');
-      openModal('Demo listing photos', listings[i].photos, 0);
-    };
-  });
-}
+  <main class="container">
 
-renderCards();
-</script>
+    <section id="listings" class="section">
+      <div class="card pad">
+        <h2>Rental Listings</h2>
+        <p class="lead">
+          These are <span class="strong">demo listings</span> showing how real rentals will appear once property managers are onboarded.
+        </p>
+
+        <div id="cards"></div>
+
+        <div class="hr"></div>
+        <span class="badge">Demo listings • Real listings coming soon</span>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="card pad">
+        <h2>How Renting Works in Winnemucca, NV</h2>
+        <p>
+          Winnemucca’s rental market is shaped by limited inventory and rapidly changing demand.
+          Many rentals are filled before they are widely advertised, and availability can change within days or even hours.
+        </p>
+        <p>
+          Renters often contact multiple property managers to confirm what is actually available.
+          Local Rental Search is being built to simplify that process by centralizing availability in one place.
+        </p>
+        <span class="badge">Local rental market overview • Winnemucca, Nevada</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card pad">
+        <h2>Why Rental Availability Changes Quickly in Winnemucca</h2>
+        <ul>
+          <li>Limited number of apartment communities</li>
+          <li>Workforce housing tied to local industries</li>
+          <li>Short turnover windows between tenants</li>
+          <li>Decentralized property management offices</li>
+        </ul>
+        <p>
+          This platform is designed to reduce outdated listings by allowing property managers to update availability directly.
+        </p>
+        <span class="badge">Rental availability insights • Small-town housing</span>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="card pad">
+        <h2>How Listings Are Updated on Local Rental Search</h2>
+        <p>
+          Listings on Local Rental Search are intended to be updated by participating property managers or their authorized representatives.
+        </p>
+        <p>
+          Until full participation is active, demo listings are shown to illustrate how units, photos, and availability will be displayed.
+        </p>
+        <span class="badge">Transparency notice • Manager-updated listings</span>
+      </div>
+    </section>
+
+    <section id="managers" class="section">
+      <div class="card pad">
+        <h2>Property Managers in Winnemucca</h2>
+        <p class="lead">
+          Local Rental Search is being built to reduce repetitive inquiries and keep availability accurate.
+        </p>
+        <span class="badge">Page focus: Winnemucca, NV rentals • Content updated monthly</span>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="hr"></div>
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>© <span id="yr"></span> Local Rental Search</div>
+        <div>
+          <a href="../">Home</a> • <a href="#listings">Listings</a> • <a href="#about">About</a>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- FULLSCREEN GALLERY MODAL -->
+  <div class="modal" id="galleryModal" aria-hidden="true">
+    <div class="modal-inner">
+      <div class="modal-top">
+        <div class="modal-title" id="modalTitle">Photos</div>
+        <div class="modal-close" id="modalClose" role="button" aria-label="Close">X</div>
+      </div>
+
+      <div class="modal-stage" id="modalStage">
+        <img id="modalImg" alt="Listing photo" />
+      </div>
+
+      <div class="modal-nav">
+        <button class="modal-btn" id="prevBtn" type="button">Prev</button>
+        <div class="modal-counter" id="modalCounter">1 / 1</div>
+        <button class="modal-btn" id="nextBtn" type="button">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    // Demo listings (picsum = safe placeholder images)
+    const listings = [
+      {
+        status: "Demo listing",
+        unit: "#12",
+        beds: "1",
+        rent: 1400,
+        address: "Example Apartment — Winnemucca, NV",
+        photos: [
+          "https://picsum.photos/seed/winnemucca-demo1/1200/800",
+          "https://picsum.photos/seed/winnemucca-demo2/1200/800",
+          "https://picsum.photos/seed/winnemucca-demo3/1200/800"
+        ]
+      }
+    ];
+
+    // Modal/gallery
+    const modal = document.getElementById('galleryModal');
+    const modalImg = document.getElementById('modalImg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalCounter = document.getElementById('modalCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const modalClose = document.getElementById('modalClose');
+    const modalStage = document.getElementById('modalStage');
+
+    let currentPhotos = [];
+    let currentIndex = 0;
+    let savedScrollY = 0;
+
+    function openModal(title, photos, startIndex){
+      savedScrollY = window.scrollY || 0;
+      currentPhotos = Array.isArray(photos) ? photos : [];
+      currentIndex = Math.max(0, Math.min(startIndex || 0, currentPhotos.length - 1));
+
+      modalTitle.textContent = title || "Photos";
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+
+      // lock background scroll
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${savedScrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+
+      renderModal();
+    }
+
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+
+      // unlock scroll + restore position
+      const y = savedScrollY;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      window.scrollTo(0, y);
+    }
+
+    function renderModal(){
+      const total = currentPhotos.length || 0;
+      if(!total){
+        modalImg.removeAttribute('src');
+        modalCounter.textContent = `0 / 0`;
+        return;
+      }
+      modalImg.src = currentPhotos[currentIndex];
+      modalCounter.textContent = `${currentIndex + 1} / ${total}`;
+    }
+
+    function prev(){
+      if(currentPhotos.length <= 1) return;
+      currentIndex = (currentIndex - 1 + currentPhotos.length) % currentPhotos.length;
+      renderModal();
+    }
+
+    function next(){
+      if(currentPhotos.length <= 1) return;
+      currentIndex = (currentIndex + 1) % currentPhotos.length;
+      renderModal();
+    }
+
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
+    modalClose.addEventListener('click', closeModal);
+
+    // close if tap outside overlay
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) closeModal();
+    });
+
+    // swipe support
+    let touchX = null;
+    modalStage.addEventListener('touchstart', (e) => {
+      touchX = e.changedTouches[0].clientX;
+    }, {passive:true});
+    modalStage.addEventListener('touchend', (e) => {
+      if(touchX === null) return;
+      const endX = e.changedTouches[0].clientX;
+      const dx = endX - touchX;
+      touchX = null;
+      if(Math.abs(dx) < 35) return;
+      if(dx > 0) prev(); else next();
+    }, {passive:true});
+
+    // Render cards
+    function renderCards(items){
+      const wrap = document.getElementById('cards');
+      wrap.innerHTML = "";
+
+      items.forEach((item, idx) => {
+        const cover = (item.photos && item.photos.length) ? item.photos[0] : "";
+
+        const card = document.createElement('div');
+        card.className = "card pad";
+        card.style.background = "rgba(255,255,255,.02)";
+        card.style.boxShadow = "none";
+
+        card.innerHTML = `
+          <div class="listing-meta">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <span class="badge">${item.status}</span>
+              <span class="badge">Unit: <strong>${item.unit}</strong></span>
+              <span class="badge">Beds: <strong>${item.beds}</strong></span>
+            </div>
+            <span class="badge">Rent: <strong>$${item.rent}/mo</strong></span>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div class="muted" style="font-size:12px;margin-bottom:4px;">Building / Area</div>
+            <div class="strong" style="word-break:break-word;">${item.address}</div>
+          </div>
+
+          <div class="photo-preview">
+            <button type="button" data-open-gallery="${idx}" aria-label="Open photo gallery">
+              ${cover ? `<img src="${cover}" alt="Demo apartment photo" loading="lazy" />`
+                      : `<div style="padding:16px;color:var(--muted);">No photos yet</div>`}
+            </button>
+          </div>
+
+          <div style="margin-top:10px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+            <span class="badge">${item.photos.length} photo(s)</span>
+            <span class="badge">Tap to view full screen</span>
+          </div>
+        `;
+
+        wrap.appendChild(card);
+      });
+
+      wrap.querySelectorAll('[data-open-gallery]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const i = Number(btn.getAttribute('data-open-gallery'));
+          const item = items[i];
+          openModal(`${item.address} • Unit ${item.unit}`, item.photos || [], 0);
+        });
+      });
+    }
+
+    renderCards(listings);
+  </script>
 
 </body>
 </html>
