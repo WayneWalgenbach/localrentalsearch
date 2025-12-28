@@ -18,6 +18,8 @@ body{
               var(--bg);
   color:var(--text);
   line-height:1.45;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a{color:inherit;text-decoration:none}
@@ -29,6 +31,7 @@ a:hover{text-decoration:underline}
 .nav{
   position:sticky; top:0; z-index:10;
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   background: rgba(11,16,32,.78);
   border-bottom:1px solid var(--border);
 }
@@ -125,7 +128,7 @@ p{margin:0 0 10px}
 .form-row{display:grid;grid-template-columns:1fr;gap:10px}
 @media (min-width: 650px){ .form-row{grid-template-columns:1fr 1fr} }
 
-input, select{
+input, select, textarea{
   width:100%;
   padding:12px 12px;border-radius:12px;
   border:1px solid var(--border);
@@ -133,10 +136,11 @@ input, select{
   color:var(--text);
   outline:none;
 }
-input::placeholder{color: rgba(234,240,255,.45)}
+input::placeholder, textarea::placeholder{color: rgba(234,240,255,.45)}
+textarea{resize:vertical}
+
 small{color:var(--muted)}
 
-/* KPIs: mobile-first */
 .kpi{display:grid;grid-template-columns:1fr;gap:10px}
 @media (min-width: 650px){ .kpi{grid-template-columns:1fr 1fr} }
 .kpi .mini{padding:14px;border-radius:14px;border:1px solid var(--border);background: rgba(255,255,255,.03)}
@@ -161,44 +165,7 @@ small{color:var(--muted)}
 .occupied{background: rgba(255,255,255,.06)}
 .occupied .dot{background: rgba(234,240,255,.45)}
 
-/* TABLE: desktop */
-.table{
-  width:100%; border-collapse:separate; border-spacing:0;
-  overflow:hidden; border-radius:14px; border:1px solid var(--border);
-}
-.table th, .table td{
-  padding:12px 12px; text-align:left;
-  border-bottom:1px solid var(--border);
-  vertical-align:top;
-}
-.table th{color:var(--muted);font-weight:700;background: rgba(255,255,255,.03)}
-.table tr:last-child td{border-bottom:none}
-
-/* MOBILE LISTINGS: convert rows to cards */
-@media (max-width: 720px){
-  .table thead{display:none}
-  .table, .table tbody, .table tr, .table td{display:block;width:100%}
-  .table{border:none;border-radius:0}
-  .table tr{
-    background: rgba(17,26,51,.78);
-    border:1px solid var(--border);
-    border-radius:16px;
-    padding:12px;
-    margin:0 0 12px 0;
-    box-shadow: var(--shadow);
-  }
-  .table td{
-    border:none;
-    padding:7px 0;
-  }
-  .table td[data-label]::before{
-    content: attr(data-label);
-    display:block;
-    color: var(--muted);
-    font-size:12px;
-    margin-bottom:3px;
-  }
-  /* Listing photo preview */
+/* Listing photo preview (used on cards) */
 .photo-preview{
   width:100%;
   border-radius:14px;
@@ -305,12 +272,12 @@ small{color:var(--muted)}
   cursor:pointer;
 }
 .modal-btn:hover{ filter: brightness(1.08); }
+.modal-btn:disabled{ opacity:.35; cursor:not-allowed; }
 
 .modal-counter{
   min-width:120px;
   text-align:center;
-  color: var(--muted);
+  color:var(--muted);
   font-size:13px;
   font-weight:700;
-}
 }
