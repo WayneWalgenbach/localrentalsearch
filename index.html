@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Local Rental Search — All local rentals. One place. Always current.</title>
+  <meta name="description" content="Local Rental Search consolidates rental availability by town. Live listings updated directly by property managers." />
+  <link rel="stylesheet" href="./assets/style.css" />
+</head>
+<body>
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>Local Rental Search</div>
+      </div>
+      <div class="nav-links">
+        <a class="pill" href="./winnemucca/">Winnemucca</a>
+        <a class="pill" href="#property-managers">Property Managers</a>
+        <a class="pill" href="#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="container hero-grid">
+      <div class="card pad">
+        <div class="badge">Live availability • Town-by-town • Simple and accurate</div>
+        <h1>Find every rental in your town — in one search.</h1>
+        <p class="lead">
+          No outdated classifieds. No calling five offices. Listings are intended to be updated directly by local property managers so availability stays current.
+        </p>
+
+        <div class="btns">
+          <a class="btn primary" href="./winnemucca/">Search Winnemucca</a>
+          <a class="btn secondary" href="#property-managers">List rentals (managers)</a>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Choose a town</h2>
+        <div class="form-row">
+          <select id="townSelect" aria-label="Choose a town">
+            <option value="">Select…</option>
+            <option value="./winnemucca/">Winnemucca, NV</option>
+            <option value="">Elko, NV (coming soon)</option>
+            <option value="">Battle Mountain, NV (coming soon)</option>
+          </select>
+          <button class="btn primary" id="goTown" type="button">Go</button>
+        </div>
+        <small>More towns will be added as local property managers onboard.</small>
+      </div>
+
+      <aside class="card pad">
+        <h2>What this is</h2>
+        <p class="lead" style="margin-bottom:12px;">
+          A single rental index per town, paired with a lightweight manager system that keeps the public listings current.
+        </p>
+
+        <div class="kpi">
+          <div class="mini">
+            <div class="num">1</div>
+            <div class="lbl">Town page live</div>
+          </div>
+          <div class="mini">
+            <div class="num">0</div>
+            <div class="lbl">Managers onboarded (starting now)</div>
+          </div>
+          <div class="mini">
+            <div class="num">Live</div>
+            <div class="lbl">Availability concept</div>
+          </div>
+          <div class="mini">
+            <div class="num">Fast</div>
+            <div class="lbl">Simple MVP build</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);font-size:13px;">
+          Note: This site does not collect application fees or payments. It focuses on accurate availability and manager contact.
+        </p>
+      </aside>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section">
+      <div class="grid3">
+        <div class="card pad">
+          <h2>For renters</h2>
+          <p>See what’s available now (and what’s coming soon) without chasing down phone numbers.</p>
+          <p class="badge">One place • Clear status • Quick contact</p>
+        </div>
+        <div class="card pad">
+          <h2>For managers</h2>
+          <p>Update unit status once. The public site reflects it. Track lease end dates and vacancy time cleanly.</p>
+          <p class="badge">Less calls • Less chaos • More control</p>
+        </div>
+        <div class="card pad">
+          <h2>For the town</h2>
+          <p>A reliable rental index reduces friction for new hires, families moving in, and local employers.</p>
+          <p class="badge">Local completeness • Always-current goal</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="property-managers">
+      <div class="card pad">
+        <h2>Property managers: get listed and keep availability current</h2>
+        <p class="lead">
+          If you manage rentals in a town we cover, we can list your units and (optionally) provide a simple dashboard so your team can update availability and track lease dates.
+        </p>
+
+        <div class="grid3">
+          <div class="card pad" style="background:rgba(255,255,255,.03);border:1px solid var(--border);box-shadow:none;">
+            <h2 style="font-size:18px;margin-bottom:6px;">Listing Only</h2>
+            <p style="color:var(--muted);margin-bottom:10px;">We publish and maintain your public availability.</p>
+            <div class="badge">$49/mo (intro)</div>
+          </div>
+          <div class="card pad" style="background:rgba(255,255,255,.03);border:1px solid var(--border);box-shadow:none;">
+            <h2 style="font-size:18px;margin-bottom:6px;">Dashboard</h2>
+            <p style="color:var(--muted);margin-bottom:10px;">Your team updates status; the site updates automatically.</p>
+            <div class="badge">$99/mo (intro)</div>
+          </div>
+          <div class="card pad" style="background:rgba(255,255,255,.03);border:1px solid var(--border);box-shadow:none;">
+            <h2 style="font-size:18px;margin-bottom:6px;">Done-For-You</h2>
+            <p style="color:var(--muted);margin-bottom:10px;">We handle updates + basic vacancy/lease reminders.</p>
+            <div class="badge">$199/mo (intro)</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);font-size:13px;">
+          Pricing is introductory for early partners in Winnemucca and will evolve as features expand.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="card pad">
+        <h2>Contact</h2>
+        <p class="lead">Use this form to request a listing, update availability, or ask about manager access.</p>
+
+        <!-- Replace the email below with your real email once you create it -->
+        <p class="badge">Email: <strong>listings@localrentalsearch.com</strong></p>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);font-size:13px;">
+          Next step: once your domain is connected, we can add a real contact form (Formspree/Netlify Forms) without paid hosting.
+        </p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="hr"></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center">
+        <div>© <span id="yr"></span> Local Rental Search</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="./winnemucca/">Winnemucca</a>
+          <a href="#property-managers">Property Managers</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    document.getElementById('goTown').addEventListener('click', () => {
+      const v = document.getElementById('townSelect').value;
+      if (v) location.href = v;
+    });
+  </script>
+</body>
+</html>
