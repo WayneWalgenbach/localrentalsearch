@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Winnemucca, NV Rentals — Local Rental Search</title>
+  <meta name="description" content="Winnemucca, NV rental availability. Filter by bedrooms, price, and status. Contact property managers directly." />
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="nav">
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div><a href="../">Local Rental Search</a></div>
+      </div>
+      <div class="nav-links">
+        <a class="pill" href="../">Home</a>
+        <a class="pill" href="#listings">Listings</a>
+        <a class="pill" href="#managers">Property Managers</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="hero">
+    <div class="container">
+      <div class="card pad">
+        <div class="badge">Town page</div>
+        <h1 style="margin-bottom:6px;">Winnemucca, NV Rentals</h1>
+        <p class="lead" style="margin-bottom:0;">
+          This page is a structured rental index for Winnemucca. Status labels show whether a unit is Available, Coming Soon, or Occupied.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="section" id="listings">
+      <div class="card pad">
+        <h2>Search & Filters</h2>
+        <div class="form-row">
+          <select id="bedFilter" aria-label="Bedrooms">
+            <option value="">Bedrooms (Any)</option>
+            <option value="Studio">Studio</option>
+            <option value="1">1 Bedroom</option>
+            <option value="2">2 Bedroom</option>
+            <option value="3">3 Bedroom</option>
+          </select>
+          <select id="statusFilter" aria-label="Status">
+            <option value="">Status (Any)</option>
+            <option value="Available">Available</option>
+            <option value="Coming Soon">Coming Soon</option>
+            <option value="Occupied">Occupied</option>
+          </select>
+        </div>
+        <div class="form-row" style="margin-top:10px;">
+          <input id="maxRent" type="number" inputmode="numeric" placeholder="Max rent (e.g., 1800)" />
+          <input id="searchText" type="text" placeholder="Search: manager, building, address, notes…" />
+        </div>
+        <div class="btns">
+          <button class="btn primary" id="applyFilters" type="button">Apply</button>
+          <button class="btn secondary" id="clearFilters" type="button">Clear</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Listings (sample data)</h2>
+        <p class="lead">
+          These are placeholder examples until managers are onboarded. Once live, updates will come from participating property managers.
+        </p>
+
+        <table class="table" aria-label="Winnemucca rental listings">
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Unit</th>
+              <th>Beds</th>
+              <th>Rent</th>
+              <th>Manager</th>
+              <th>Building / Address</th>
+              <th>Available</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody id="rows">
+            <tr data-beds="1" data-status="Available" data-rent="1400" data-text="silver ridge apartments example management 1234 winnemucca blvd">
+              <td><span class="status available"><span class="dot"></span>Available</span></td>
+              <td>#12</td>
+              <td>1</td>
+              <td>$1,400</td>
+              <td>Example Management</td>
+              <td>Silver Ridge Apts — 1234 Winnemucca Blvd</td>
+              <td>Now</td>
+              <td><a class="pill" href="tel:+17755550123">Call</a></td>
+            </tr>
+
+            <tr data-beds="2" data-status="Coming Soon" data-rent="1750" data-text="sage creek townhomes sample property group 88 canyon rd">
+              <td><span class="status soon"><span class="dot"></span>Coming Soon</span></td>
+              <td>#7</td>
+              <td>2</td>
+              <td>$1,750</td>
+              <td>Sample Property Group</td>
+              <td>Sage Creek — 88 Canyon Rd</td>
+              <td>Jan 15</td>
+              <td><a class="pill" href="tel:+17755550123">Call</a></td>
+            </tr>
+
+            <tr data-beds="Studio" data-status="Occupied" data-rent="1100" data-text="downtown studios placeholder manager 10 bridge st">
+              <td><span class="status occupied"><span class="dot"></span>Occupied</span></td>
+              <td>#3</td>
+              <td>Studio</td>
+              <td>$1,100</td>
+              <td>Placeholder Manager</td>
+              <td>Downtown Studios — 10 Bridge St</td>
+              <td>—</td>
+              <td><span class="badge">N/A</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);font-size:13px;">
+          Want your listings shown here accurately? Property managers can request listing access below.
+        </p>
+      </div>
+    </section>
+
+    <section class="section" id="managers">
+      <div class="card pad">
+        <h2>Property managers in Winnemucca</h2>
+        <p class="lead">
+          If you manage apartments or rentals in Winnemucca, we can set you up with a simple workflow to keep availability current on this page.
+        </p>
+
+        <div class="btns">
+          <a class="btn primary" href="mailto:listings@localrentalsearch.com?subject=Winnemucca%20Manager%20Onboarding&body=Company%20name%3A%0AContact%20name%3A%0APhone%3A%0AEmail%3A%0AApprox%20%23%20of%20units%3A%0A">
+            Email for onboarding
+          </a>
+          <a class="btn secondary" href="../#property-managers">View plans</a>
+        </div>
+
+        <div class="hr"></div>
+        <p style="margin:0;color:var(--muted);font-size:13px;">
+          Next milestone: replace “sample data” with manager-fed availability and add more towns as partners onboard.
+        </p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="hr"></div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center">
+        <div>© <span id="yr"></span> Local Rental Search</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <a href="../">Home</a>
+          <a href="#listings">Listings</a>
+          <a href="#managers">Managers</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    function apply(){
+      const beds = document.getElementById('bedFilter').value.trim();
+      const status = document.getElementById('statusFilter').value.trim();
+      const maxRentVal = document.getElementById('maxRent').value.trim();
+      const q = document.getElementById('searchText').value.trim().toLowerCase();
+
+      const maxRent = maxRentVal ? Number(maxRentVal) : null;
+
+      document.querySelectorAll('#rows tr').forEach(tr => {
+        const trBeds = tr.getAttribute('data-beds');
+        const trStatus = tr.getAttribute('data-status');
+        const trRent = Number(tr.getAttribute('data-rent'));
+        const trText = (tr.getAttribute('data-text') || '').toLowerCase();
+
+        let ok = true;
+        if (beds && trBeds !== beds) ok = false;
+        if (status && trStatus !== status) ok = false;
+        if (maxRent !== null && !(trRent <= maxRent)) ok = false;
+        if (q && !trText.includes(q)) ok = false;
+
+        tr.style.display = ok ? '' : 'none';
+      });
+    }
+
+    document.getElementById('applyFilters').addEventListener('click', apply);
+    document.getElementById('clearFilters').addEventListener('click', () => {
+      document.getElementById('bedFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('maxRent').value = '';
+      document.getElementById('searchText').value = '';
+      apply();
+    });
+
+    // Apply on Enter in text fields
+    document.getElementById('searchText').addEventListener('keydown', (e)=>{ if(e.key==='Enter') apply(); });
+    document.getElementById('maxRent').addEventListener('keydown', (e)=>{ if(e.key==='Enter') apply(); });
+  </script>
+</body>
+</html>
