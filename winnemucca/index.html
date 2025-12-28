@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Winnemucca, NV Rentals — Local Rental Search</title>
-  <meta name="description" content="Winnemucca, NV rental availability. Filter by bedrooms, price, and status. Contact property managers directly." />
+  <meta name="description" content="Winnemucca, NV rental availability. Filter by bedrooms, max rent, and status. Contact property managers directly." />
   <link rel="stylesheet" href="../assets/style.css" />
 </head>
 <body>
@@ -16,8 +16,9 @@
       </div>
       <div class="nav-links">
         <a class="pill" href="../">Home</a>
+        <a class="pill" href="#filters">Filters</a>
         <a class="pill" href="#listings">Listings</a>
-        <a class="pill" href="#managers">Property Managers</a>
+        <a class="pill" href="#managers">Managers</a>
       </div>
     </div>
   </div>
@@ -28,16 +29,19 @@
         <div class="badge">Town page</div>
         <h1 style="margin-bottom:6px;">Winnemucca, NV Rentals</h1>
         <p class="lead" style="margin-bottom:0;">
-          This page is a structured rental index for Winnemucca. Status labels show whether a unit is Available, Coming Soon, or Occupied.
+          This page is designed to be a single, accurate index for Winnemucca rental availability. Status labels show whether a unit is Available, Coming Soon, or Occupied.
         </p>
       </div>
     </div>
   </header>
 
   <main class="container">
-    <section class="section" id="listings">
+
+    <section class="section" id="filters">
       <div class="card pad">
         <h2>Search & Filters</h2>
+        <p class="lead">Use filters to narrow down listings. (Current listings are sample placeholders until managers onboard.)</p>
+
         <div class="form-row">
           <select id="bedFilter" aria-label="Bedrooms">
             <option value="">Bedrooms (Any)</option>
@@ -46,6 +50,7 @@
             <option value="2">2 Bedroom</option>
             <option value="3">3 Bedroom</option>
           </select>
+
           <select id="statusFilter" aria-label="Status">
             <option value="">Status (Any)</option>
             <option value="Available">Available</option>
@@ -53,10 +58,12 @@
             <option value="Occupied">Occupied</option>
           </select>
         </div>
+
         <div class="form-row" style="margin-top:10px;">
           <input id="maxRent" type="number" inputmode="numeric" placeholder="Max rent (e.g., 1800)" />
-          <input id="searchText" type="text" placeholder="Search: manager, building, address, notes…" />
+          <input id="searchText" type="text" placeholder="Search: manager, building, address…" />
         </div>
+
         <div class="btns">
           <button class="btn primary" id="applyFilters" type="button">Apply</button>
           <button class="btn secondary" id="clearFilters" type="button">Clear</button>
@@ -64,63 +71,27 @@
 
         <div class="hr"></div>
 
-        <h2>Listings (sample data)</h2>
+        <div class="badge" id="resultCount">Showing 0 listings</div>
+        <small style="display:block;margin-top:8px;">
+          Tip: On mobile, listings display as cards. On desktop, they remain card-based for consistency.
+        </small>
+      </div>
+    </section>
+
+    <section class="section" id="listings">
+      <div class="card pad">
+        <h2>Listings</h2>
         <p class="lead">
-          These are placeholder examples until managers are onboarded. Once live, updates will come from participating property managers.
+          These are sample entries to demonstrate the system. When a manager is onboarded, their updates will reflect here.
         </p>
 
-        <table class="table" aria-label="Winnemucca rental listings">
-          <thead>
-            <tr>
-              <th>Status</th>
-              <th>Unit</th>
-              <th>Beds</th>
-              <th>Rent</th>
-              <th>Manager</th>
-              <th>Building / Address</th>
-              <th>Available</th>
-              <th>Contact</th>
-            </tr>
-          </thead>
-          <tbody id="rows">
-            <tr data-beds="1" data-status="Available" data-rent="1400" data-text="silver ridge apartments example management 1234 winnemucca blvd">
-              <td><span class="status available"><span class="dot"></span>Available</span></td>
-              <td>#12</td>
-              <td>1</td>
-              <td>$1,400</td>
-              <td>Example Management</td>
-              <td>Silver Ridge Apts — 1234 Winnemucca Blvd</td>
-              <td>Now</td>
-              <td><a class="pill" href="tel:+17755550123">Call</a></td>
-            </tr>
-
-            <tr data-beds="2" data-status="Coming Soon" data-rent="1750" data-text="sage creek townhomes sample property group 88 canyon rd">
-              <td><span class="status soon"><span class="dot"></span>Coming Soon</span></td>
-              <td>#7</td>
-              <td>2</td>
-              <td>$1,750</td>
-              <td>Sample Property Group</td>
-              <td>Sage Creek — 88 Canyon Rd</td>
-              <td>Jan 15</td>
-              <td><a class="pill" href="tel:+17755550123">Call</a></td>
-            </tr>
-
-            <tr data-beds="Studio" data-status="Occupied" data-rent="1100" data-text="downtown studios placeholder manager 10 bridge st">
-              <td><span class="status occupied"><span class="dot"></span>Occupied</span></td>
-              <td>#3</td>
-              <td>Studio</td>
-              <td>$1,100</td>
-              <td>Placeholder Manager</td>
-              <td>Downtown Studios — 10 Bridge St</td>
-              <td>—</td>
-              <td><span class="badge">N/A</span></td>
-            </tr>
-          </tbody>
-        </table>
+        <!-- Cards container -->
+        <div id="cards" style="display:grid;gap:12px;"></div>
 
         <div class="hr"></div>
+
         <p style="margin:0;color:var(--muted);font-size:13px;">
-          Want your listings shown here accurately? Property managers can request listing access below.
+          If you are a property manager and want accurate listings here, request onboarding below.
         </p>
       </div>
     </section>
@@ -133,15 +104,17 @@
         </p>
 
         <div class="btns">
-          <a class="btn primary" href="mailto:listings@localrentalsearch.com?subject=Winnemucca%20Manager%20Onboarding&body=Company%20name%3A%0AContact%20name%3A%0APhone%3A%0AEmail%3A%0AApprox%20%23%20of%20units%3A%0A">
+          <a class="btn primary"
+             href="mailto:listings@localrentalsearch.com?subject=Winnemucca%20Manager%20Onboarding&body=Company%20name%3A%0AContact%20name%3A%0APhone%3A%0AEmail%3A%0AApprox%20%23%20of%20units%3A%0A">
             Email for onboarding
           </a>
           <a class="btn secondary" href="../#property-managers">View plans</a>
         </div>
 
         <div class="hr"></div>
+
         <p style="margin:0;color:var(--muted);font-size:13px;">
-          Next milestone: replace “sample data” with manager-fed availability and add more towns as partners onboard.
+          Next milestone: replace sample data with manager-fed availability, then add additional towns.
         </p>
       </div>
     </section>
@@ -152,52 +125,155 @@
         <div>© <span id="yr"></span> Local Rental Search</div>
         <div style="display:flex;gap:12px;flex-wrap:wrap">
           <a href="../">Home</a>
+          <a href="#filters">Filters</a>
           <a href="#listings">Listings</a>
           <a href="#managers">Managers</a>
         </div>
       </div>
     </footer>
+
   </main>
 
   <script>
     document.getElementById('yr').textContent = new Date().getFullYear();
 
-    function apply(){
+    // Sample data (replace later with real manager-fed data)
+    const listings = [
+      {
+        status: "Available",
+        unit: "#12",
+        beds: "1",
+        rent: 1400,
+        manager: "Example Management",
+        address: "Silver Ridge Apts — 1234 Winnemucca Blvd",
+        availableDate: "Now",
+        contactType: "call",
+        contactValue: "+17755550123",
+        searchText: "silver ridge apartments example management 1234 winnemucca blvd"
+      },
+      {
+        status: "Coming Soon",
+        unit: "#7",
+        beds: "2",
+        rent: 1750,
+        manager: "Sample Property Group",
+        address: "Sage Creek — 88 Canyon Rd",
+        availableDate: "Jan 15",
+        contactType: "call",
+        contactValue: "+17755550123",
+        searchText: "sage creek townhomes sample property group 88 canyon rd"
+      },
+      {
+        status: "Occupied",
+        unit: "#3",
+        beds: "Studio",
+        rent: 1100,
+        manager: "Placeholder Manager",
+        address: "Downtown Studios — 10 Bridge St",
+        availableDate: "—",
+        contactType: "none",
+        contactValue: "",
+        searchText: "downtown studios placeholder manager 10 bridge st"
+      }
+    ];
+
+    function statusChip(status){
+      const s = (status || "").toLowerCase();
+      if(s === "available") return `<span class="status available"><span class="dot"></span>Available</span>`;
+      if(s === "coming soon") return `<span class="status soon"><span class="dot"></span>Coming Soon</span>`;
+      return `<span class="status occupied"><span class="dot"></span>Occupied</span>`;
+    }
+
+    function money(n){
+      try { return new Intl.NumberFormat('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0}).format(n); }
+      catch(e){ return '$' + n; }
+    }
+
+    function renderCards(items){
+      const wrap = document.getElementById('cards');
+      wrap.innerHTML = "";
+
+      items.forEach(item => {
+        const contact = item.contactType === "call"
+          ? `<a class="pill" href="tel:${item.contactValue}">Call</a>`
+          : `<span class="badge">N/A</span>`;
+
+        const card = document.createElement('div');
+        card.className = "card pad";
+        card.style.background = "rgba(255,255,255,.03)";
+        card.style.boxShadow = "none";
+
+        card.innerHTML = `
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              ${statusChip(item.status)}
+              <span class="badge">Unit: <strong>${item.unit}</strong></span>
+              <span class="badge">Beds: <strong>${item.beds}</strong></span>
+            </div>
+            <div class="badge">Rent: <strong>${money(item.rent)}</strong></div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">Manager</div>
+            <div style="font-weight:800;">${item.manager}</div>
+          </div>
+
+          <div style="margin-top:10px;">
+            <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">Building / Address</div>
+            <div>${item.address}</div>
+          </div>
+
+          <div style="margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+            <div>
+              <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">Available</div>
+              <div style="font-weight:800;">${item.availableDate}</div>
+            </div>
+            <div>
+              <div style="color:var(--muted);font-size:12px;margin-bottom:4px;">Contact</div>
+              <div>${contact}</div>
+            </div>
+          </div>
+        `;
+        wrap.appendChild(card);
+      });
+
+      document.getElementById('resultCount').textContent = `Showing ${items.length} listing${items.length === 1 ? '' : 's'}`;
+    }
+
+    function applyFilters(){
       const beds = document.getElementById('bedFilter').value.trim();
       const status = document.getElementById('statusFilter').value.trim();
       const maxRentVal = document.getElementById('maxRent').value.trim();
       const q = document.getElementById('searchText').value.trim().toLowerCase();
-
       const maxRent = maxRentVal ? Number(maxRentVal) : null;
 
-      document.querySelectorAll('#rows tr').forEach(tr => {
-        const trBeds = tr.getAttribute('data-beds');
-        const trStatus = tr.getAttribute('data-status');
-        const trRent = Number(tr.getAttribute('data-rent'));
-        const trText = (tr.getAttribute('data-text') || '').toLowerCase();
-
+      const filtered = listings.filter(item => {
         let ok = true;
-        if (beds && trBeds !== beds) ok = false;
-        if (status && trStatus !== status) ok = false;
-        if (maxRent !== null && !(trRent <= maxRent)) ok = false;
-        if (q && !trText.includes(q)) ok = false;
-
-        tr.style.display = ok ? '' : 'none';
+        if (beds && item.beds !== beds) ok = false;
+        if (status && item.status !== status) ok = false;
+        if (maxRent !== null && !(item.rent <= maxRent)) ok = false;
+        if (q && !(item.searchText || "").toLowerCase().includes(q)) ok = false;
+        return ok;
       });
+
+      renderCards(filtered);
     }
 
-    document.getElementById('applyFilters').addEventListener('click', apply);
+    document.getElementById('applyFilters').addEventListener('click', applyFilters);
     document.getElementById('clearFilters').addEventListener('click', () => {
       document.getElementById('bedFilter').value = '';
       document.getElementById('statusFilter').value = '';
       document.getElementById('maxRent').value = '';
       document.getElementById('searchText').value = '';
-      apply();
+      applyFilters();
     });
 
-    // Apply on Enter in text fields
-    document.getElementById('searchText').addEventListener('keydown', (e)=>{ if(e.key==='Enter') apply(); });
-    document.getElementById('maxRent').addEventListener('keydown', (e)=>{ if(e.key==='Enter') apply(); });
+    // Apply on Enter for quick mobile use
+    document.getElementById('searchText').addEventListener('keydown', (e)=>{ if(e.key==='Enter') applyFilters(); });
+    document.getElementById('maxRent').addEventListener('keydown', (e)=>{ if(e.key==='Enter') applyFilters(); });
+
+    // Initial render
+    renderCards(listings);
   </script>
 </body>
 </html>
