@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ARC Raiders — Quests by Quest Giver</title>
+  <meta name="description" content="ARC Raiders quest missions grouped by quest giver with checkboxes and link placeholders." />
+
+  <style>
+    :root{
+      --bg0:#070b10;
+      --bg1:#0b1220;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --line: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+
+      /* “ARC Raiders-ish” neon accents */
+      --arc-cyan:#67f5ff;
+      --arc-violet:#b49bff;
+      --arc-amber:#ffcf5a;
+
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 18px;
+      --radius2: 14px;
+      --max: 1280px;
+
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      color: var(--text);
+
+      /* Arc Raiders-looking background: deep space + industrial grid + neon haze */
+      background:
+        radial-gradient(1200px 900px at 14% 10%, rgba(103,245,255,.12), transparent 62%),
+        radial-gradient(1000px 750px at 86% 18%, rgba(180,155,255,.14), transparent 58%),
+        radial-gradient(900px 700px at 48% 92%, rgba(255,207,90,.07), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg0) 55%, #06080c);
+
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid overlay */
+    body::before{
+      content:"";
+      position: fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+      background-size: 34px 34px;
+      opacity: .10;
+      mix-blend-mode: overlay;
+    }
+
+    /* Fine noise */
+    body::after{
+      content:"";
+      position: fixed;
+      inset:-20%;
+      pointer-events:none;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");
+      opacity: .06;
+      transform: rotate(6deg);
+    }
+
+    a{ color: inherit; text-decoration: none; }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 22px 14px 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    header{
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 18px 16px;
+      position: relative;
+    }
+
+    header::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        linear-gradient(90deg, rgba(103,245,255,.20), transparent 36%),
+        linear-gradient(270deg, rgba(180,155,255,.18), transparent 36%);
+      opacity:.65;
+      filter: blur(12px);
+      pointer-events:none;
+    }
+
+    .hero{
+      position: relative;
+      z-index: 1;
+      display:flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    h1{
+      margin:0;
+      font-size: clamp(20px, 2.5vw, 30px);
+      letter-spacing: .2px;
+    }
+    .sub{
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.45;
+      max-width: 78ch;
+      font-size: 13px;
+    }
+
+    .controls{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .btn{
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      transition: transform .05s ease, background .15s ease, border-color .15s ease;
+      user-select: none;
+    }
+    .btn:hover{
+      background: rgba(255,255,255,.10);
+      border-color: rgba(103,245,255,.25);
+    }
+    .btn:active{ transform: translateY(1px); }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      background: rgba(0,0,0,.22);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      user-select:none;
+    }
+    .pill strong{ color: var(--text); font-weight: 700; }
+
+    /* Top row columns */
+    .board{
+      margin-top: 14px;
+      border-radius: var(--radius);
+    }
+
+    .columns{
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .col{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.05);
+      border-radius: var(--radius);
+      box-shadow: 0 10px 35px rgba(0,0,0,.35);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .col-head{
+      display:flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      border-bottom: 1px solid var(--line);
+    }
+
+    .avatar{
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      overflow:hidden;
+      flex: 0 0 auto;
+      background: rgba(0,0,0,.28);
+      display:grid;
+      place-items:center;
+    }
+    .avatar img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display:block;
+    }
+
+    .giver{
+      display:flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+    .giver h2{
+      margin:0;
+      font-size: 15px;
+      letter-spacing: .2px;
+    }
+    .giver .meta{
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .quests{
+      padding: 10px 10px 14px;
+      background: rgba(0,0,0,.16);
+    }
+
+    ol{
+      margin: 0;
+      padding-left: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+
+    .q{
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: 14px;
+      padding: 10px 10px;
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .q:hover{
+      border-color: rgba(103,245,255,.22);
+      background: rgba(255,255,255,.055);
+    }
+
+    .q input[type="checkbox"]{
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--arc-cyan);
+      flex: 0 0 auto;
+      cursor: pointer;
+    }
+
+    .q a{
+      display:block;
+      color: var(--text);
+      line-height: 1.25;
+      font-size: 13.5px;
+      font-weight: 650;
+      position: relative;
+      padding-right: 6px;
+      cursor: pointer;
+    }
+    .q a:hover{
+      color: rgba(255,255,255,.98);
+      text-decoration: underline;
+      text-decoration-color: rgba(103,245,255,.55);
+      text-underline-offset: 3px;
+    }
+
+    /* Arc-colored strike-through line when completed */
+    .q.done a{
+      color: rgba(255,255,255,.62);
+      text-decoration: none;
+    }
+    .q.done a::after{
+      content:"";
+      position:absolute;
+      left: 0;
+      right: 0;
+      top: 52%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--arc-cyan), var(--arc-violet));
+      border-radius: 999px;
+      opacity: .95;
+      box-shadow: 0 0 14px rgba(103,245,255,.18);
+      transform: translateY(-50%);
+      pointer-events:none;
+    }
+
+    /* Responsive */
+    @media (max-width: 1180px){
+      .columns{ grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 860px){
+      .columns{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px){
+      .columns{ grid-template-columns: 1fr; }
+      .col-head{ position: sticky; top: 10px; backdrop-filter: blur(10px); }
+    }
+
+    .foot{
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      padding: 0 4px;
+    }
+
+    /* Print */
+    @media print{
+      body{ background:#fff; color:#000; }
+      body::before, body::after, .controls{ display:none !important; }
+      header, .col{ box-shadow:none; }
+      .columns{ grid-template-columns: 1fr 1fr; }
+      .q{ background:#fff; }
+      .q.done a::after{ background:#444; box-shadow:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="hero">
+        <div>
+          <h1>ARC Raiders — Quests by Quest Giver</h1>
+          <p class="sub">
+            Five columns (left to right): each quest giver. Each quest is a clickable link (you will replace the href later).
+            Checking a quest draws an ARC-colored completion line through it.
+          </p>
+        </div>
+
+        <div class="controls">
+          <span class="pill"><strong>Tip:</strong> Click quest text = link. Check box = complete.</span>
+          <button class="btn" id="checkAll" type="button">Check all</button>
+          <button class="btn" id="uncheckAll" type="button">Uncheck all</button>
+          <button class="btn" id="clearStorage" type="button">Clear saved progress</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="board">
+      <div class="columns">
+
+        <!-- SHANI -->
+        <article class="col" data-giver="shani">
+          <div class="col-head">
+            <div class="avatar">
+              <!-- Replace these with your final images -->
+              <img src="images/arcraiders/shani.jpg" alt="Shani (ARC Raiders)" loading="lazy">
+            </div>
+            <div class="giver">
+              <h2>Shani</h2>
+              <div class="meta">Quest chain</div>
+            </div>
+          </div>
+          <div class="quests">
+            <ol>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-picking-up-the-pieces">Picking Up the Pieces</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-clearer-skies">Clearer Skies</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-trash-into-treasure">Trash Into Treasure</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-off-the-radar">Off the Radar</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-hatch-repairs">Hatch Repairs</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-down-to-earth">Down to Earth</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-the-trifecta">The Trifecta</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-dormant-barons">Dormant Barons</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-a-lay-of-the-land">A Lay of the Land</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-reduced-to-rubble">Reduced to Rubble</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-with-a-trace">With a Trace</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-out-of-the-shadows">Out of the Shadows</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-eyes-in-the-sky">Eyes in the Sky</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-our-presence-up-there">Our Presence Up There</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-communication-hideout">Communication Hideout</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-into-the-fray">Into the Fray</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-lost-in-transmission">Lost in Transmission</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-armored-transports">Armored Transports</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-cold-storage">Cold Storage</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-a-toxic-trail">A Toxic Trail</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-the-stench-of-corruption">The Stench of Corruption</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="shani-deciphering-the-data">Deciphering the Data</a></li>
+            </ol>
+          </div>
+        </article>
+
+        <!-- CELESTE -->
+        <article class="col" data-giver="celeste">
+          <div class="col-head">
+            <div class="avatar">
+              <img src="images/arcraiders/celeste.jpg" alt="Celeste (ARC Raiders)" loading="lazy">
+            </div>
+            <div class="giver">
+              <h2>Celeste</h2>
+              <div class="meta">Quest chain</div>
+            </div>
+          </div>
+          <div class="quests">
+            <ol>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-a-bad-feeling">A Bad Feeling</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-greasing-her-palms">Greasing Her Palms</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-straight-record">Straight Record</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-keeping-the-memory">Keeping the Memory</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-echoes-of-victory-ridge">Echoes of Victory Ridge</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-a-symbol-of-unification">A Symbol of Unification</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-celestes-journals">Celeste’s Journals</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-after-rain-comes">After Rain Comes</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-a-balanced-harvest">A Balanced Harvest</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-untended-garden">Untended Garden</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-the-root-of-the-matter">The Root of the Matter</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-water-troubles">Water Troubles</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-source-of-the-contamination">Source of the Contamination</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-switching-the-supply">Switching the Supply</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-power-out">Power Out</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-flickering-threat">Flickering Threat</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-bees">Bees!</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-tribute-to-toledo">Tribute to Toledo</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-digging-up-dirt">Digging Up Dirt</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="celeste-turnabout">Turnabout</a></li>
+            </ol>
+          </div>
+        </article>
+
+        <!-- TIAN WEN -->
+        <article class="col" data-giver="tian-wen">
+          <div class="col-head">
+            <div class="avatar">
+              <img src="images/arcraiders/tian-wen.jpg" alt="Tian Wen (ARC Raiders)" loading="lazy">
+            </div>
+            <div class="giver">
+              <h2>Tian Wen</h2>
+              <div class="meta">Quest chain</div>
+            </div>
+          </div>
+          <div class="quests">
+            <ol>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-the-right-tool">The Right Tool</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-a-better-use">A Better Use</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-mixed-signals">Mixed Signals</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-what-we-left-behind">What We Left Behind</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-broken-monument">Broken Monument</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-marked-for-death">Marked for Death</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-market-correction">Market Correction</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-eyes-on-the-prize">Eyes on the Prize</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-industrial-espionage">Industrial Espionage</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-unexpected-initiative">Unexpected Initiative</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-back-on-top">Back on Top</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-the-majors-footlocker">The Major’s Footlocker</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="tian-wen-snap-and-salvage">Snap and Salvage</a></li>
+            </ol>
+          </div>
+        </article>
+
+        <!-- APOLLO -->
+        <article class="col" data-giver="apollo">
+          <div class="col-head">
+            <div class="avatar">
+              <img src="images/arcraiders/apollo.jpg" alt="Apollo (ARC Raiders)" loading="lazy">
+            </div>
+            <div class="giver">
+              <h2>Apollo</h2>
+              <div class="meta">Quest chain</div>
+            </div>
+          </div>
+          <div class="quests">
+            <ol>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-safe-passage">Safe Passage</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-what-goes-around">What Goes Around</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-sparks-fly">Sparks Fly</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-a-first-foothold">A First Foothold</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-a-warm-place-to-rest">A Warm Place to Rest</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-espresso">Espresso</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-building-a-library">Building a Library</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-the-clean-dream">The Clean Dream</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-paving-the-way">Paving the Way</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="apollo-groundbreaking">Groundbreaking</a></li>
+            </ol>
+          </div>
+        </article>
+
+        <!-- LANCE -->
+        <article class="col" data-giver="lance">
+          <div class="col-head">
+            <div class="avatar">
+              <img src="images/arcraiders/lance.jpg" alt="Lance (ARC Raiders)" loading="lazy">
+            </div>
+            <div class="giver">
+              <h2>Lance</h2>
+              <div class="meta">Quest chain</div>
+            </div>
+          </div>
+          <div class="quests">
+            <ol>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="lance-doctors-orders">Doctor’s Orders</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="lance-medical-merchandise">Medical Merchandise</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="lance-a-reveal-in-ruins">A Reveal in Ruins</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="lance-prescriptions-of-the-past">Prescriptions of the Past</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="lance-life-of-a-pharmacist">Life of a Pharmacist</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="lance-a-new-type-of-plant">A New Type of Plant</a></li>
+              <li class="q"><input type="checkbox"><a href="#" data-slug="lance-in-my-image">In My Image</a></li>
+            </ol>
+          </div>
+        </article>
+
+      </div>
+
+      <p class="foot">
+        To add your YouTube tutorial links later: replace each quest’s <span style="font-family:var(--mono)">href="#"</span> with your URL.
+        (Example: <span style="font-family:var(--mono)">href="https://youtu.be/..."</span>). The checkboxes save automatically in your browser.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    (function(){
+      const STORAGE_KEY = "arc_raiders_quest_progress_v1";
+
+      const rows = Array.from(document.querySelectorAll(".q"));
+      const checkAllBtn = document.getElementById("checkAll");
+      const uncheckAllBtn = document.getElementById("uncheckAll");
+      const clearStorageBtn = document.getElementById("clearStorage");
+
+      function getRowId(row){
+        const a = row.querySelector("a[data-slug]");
+        return a ? a.getAttribute("data-slug") : null;
+      }
+
+      function applyDoneState(row, checked){
+        row.classList.toggle("done", !!checked);
+        const cb = row.querySelector('input[type="checkbox"]');
+        if (cb) cb.checked = !!checked;
+      }
+
+      function loadProgress(){
+        try{
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if(!raw) return {};
+          return JSON.parse(raw) || {};
+        }catch(e){
+          return {};
+        }
+      }
+
+      function saveProgress(state){
+        try{
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        }catch(e){
+          // ignore
+        }
+      }
+
+      function syncFromState(){
+        const state = loadProgress();
+        rows.forEach(row => {
+          const id = getRowId(row);
+          if(!id) return;
+          applyDoneState(row, !!state[id]);
+        });
+      }
+
+      function updateStateForRow(row){
+        const id = getRowId(row);
+        if(!id) return;
+
+        const cb = row.querySelector('input[type="checkbox"]');
+        const checked = cb ? cb.checked : false;
+
+        const state = loadProgress();
+        state[id] = checked;
+        saveProgress(state);
+        applyDoneState(row, checked);
+      }
+
+      // Prevent checkbox clicks from activating the link
+      rows.forEach(row => {
+        const cb = row.querySelector('input[type="checkbox"]');
+        if (cb){
+          cb.addEventListener("change", () => updateStateForRow(row));
+        }
+      });
+
+      // Bulk actions
+      checkAllBtn?.addEventListener("click", () => {
+        const state = loadProgress();
+        rows.forEach(row => {
+          const id = getRowId(row);
+          if(!id) return;
+          state[id] = true;
+          applyDoneState(row, true);
+        });
+        saveProgress(state);
+      });
+
+      uncheckAllBtn?.addEventListener("click", () => {
+        const state = loadProgress();
+        rows.forEach(row => {
+          const id = getRowId(row);
+          if(!id) return;
+          state[id] = false;
+          applyDoneState(row, false);
+        });
+        saveProgress(state);
+      });
+
+      clearStorageBtn?.addEventListener("click", () => {
+        try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+        rows.forEach(row => applyDoneState(row, false));
+      });
+
+      // Initial
+      syncFromState();
+    })();
+  </script>
+</body>
+</html>
