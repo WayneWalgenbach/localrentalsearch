@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ARC Raiders — Quest Tracker</title>
-  <meta name="description" content="ARC Raiders quests grouped by quest giver with progress tracking." />
+  <title>ARC Raiders — Quests</title>
+  <meta name="description" content="ARC Raiders quests grouped by quest giver with expandable sections and progress tracking." />
 
   <style>
     :root{
@@ -16,9 +16,11 @@
       --arc-cyan:#67f5ff;
       --arc-violet:#b49bff;
       --radius:18px;
+      --radius2:14px;
       --shadow:0 18px 60px rgba(0,0,0,.55);
       --sans:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
       --mono:ui-monospace,Menlo,Monaco,Consolas,monospace;
+      --max: 980px;
     }
 
     *{box-sizing:border-box}
@@ -33,18 +35,18 @@
     }
 
     a{color:inherit;text-decoration:none}
+    a:hover{text-decoration:underline;text-decoration-color:rgba(103,245,255,.55);text-underline-offset:3px}
 
     .wrap{
-      max-width:1400px;
+      max-width: var(--max);
       margin:auto;
       padding:18px 14px 60px;
     }
 
-    /* ===== HEADER ===== */
-    .arc-header{margin-bottom:18px}
+    /* ===== HEADER (banner + text below) ===== */
+    .arc-header{ margin-bottom:18px; }
 
     .arc-hero{
-      position:relative;
       width:100%;
       border-radius:var(--radius);
       overflow:hidden;
@@ -60,34 +62,19 @@
       object-fit:cover;
     }
 
-    .arc-overlay{
-      position:absolute;
-      inset:0;
-      background:linear-gradient(
-        to top,
-        rgba(0,0,0,.78) 0%,
-        rgba(0,0,0,.45) 40%,
-        rgba(0,0,0,.15) 70%,
-        rgba(0,0,0,0) 100%
-      );
-      display:flex;
-      align-items:flex-end;
-    }
-
-    .arc-text{
-      padding:14px 16px 16px;
-      width:100%;
+    .arc-text-below{
+      margin-top:12px;
       text-align:center;
     }
 
-    .arc-text h1{
+    .arc-text-below h1{
       margin:0;
       font-size:clamp(18px,4.8vw,30px);
       letter-spacing:.6px;
       line-height:1.1;
     }
 
-    .arc-text h1 span{color:var(--arc-cyan)}
+    .arc-text-below h1 span{ color:var(--arc-cyan); }
 
     .arc-sub{
       margin-top:6px;
@@ -96,21 +83,18 @@
       font-family:var(--mono);
     }
 
-    @media(min-width:900px){
-      .arc-text{
-        padding:18px 24px 22px;
-        text-align:left;
-      }
+    @media (min-width: 900px){
+      .arc-text-below{ text-align:left; }
     }
 
-    /* ===== QUEST BOARD ===== */
-    .columns{
+    /* ===== ACCORDION (quest givers) ===== */
+    .accordion{
       display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:14px;
+      gap:12px;
+      margin-top: 10px;
     }
 
-    .col{
+    details.giver{
       border:1px solid var(--line);
       border-radius:var(--radius);
       background:rgba(255,255,255,.04);
@@ -118,14 +102,18 @@
       overflow:hidden;
     }
 
-    .col-head{
+    details.giver > summary{
+      list-style:none;
+      cursor:pointer;
       display:flex;
       gap:12px;
       align-items:center;
       padding:12px;
+      user-select:none;
       background:rgba(255,255,255,.07);
-      border-bottom:1px solid var(--line);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
+    details.giver > summary::-webkit-details-marker{display:none}
 
     .avatar{
       width:56px;height:56px;
@@ -135,19 +123,51 @@
       flex:0 0 auto;
       background:#000;
     }
+    .avatar img{ width:100%;height:100%;object-fit:cover;display:block; }
 
-    .avatar img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
+    .giver-title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width:0;
+    }
+    .giver-title h2{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .giver-title span{
+      font-size:12px;
+      color:var(--muted);
+      font-family:var(--mono);
     }
 
-    .giver h2{margin:0;font-size:16px}
-    .giver span{font-size:12px;color:var(--muted);font-family:var(--mono)}
+    .chev{
+      margin-left:auto;
+      width:34px;height:34px;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.22);
+      color:var(--muted);
+      transition: transform .16s ease;
+      flex:0 0 auto;
+    }
+    details[open] .chev{ transform: rotate(180deg); }
 
-    .quests{padding:10px}
+    .quests{
+      padding:10px 10px 14px;
+      background:rgba(0,0,0,.12);
+    }
 
-    ol{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+    ol{
+      list-style:none;
+      margin:0;
+      padding:0;
+      display:grid;
+      gap:8px;
+    }
 
     .q{
       display:flex;
@@ -156,7 +176,7 @@
       padding:10px;
       border-radius:14px;
       background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.10);
     }
 
     .q input{
@@ -164,6 +184,7 @@
       width:18px;height:18px;
       accent-color:var(--arc-cyan);
       cursor:pointer;
+      flex:0 0 auto;
     }
 
     .q a{
@@ -171,177 +192,219 @@
       font-weight:600;
       line-height:1.25;
       position:relative;
+      display:block;
+      width:100%;
     }
 
-    .q.done a{color:rgba(255,255,255,.6)}
+    .q.done a{ color:rgba(255,255,255,.6); text-decoration:none; }
 
     .q.done a::after{
       content:"";
       position:absolute;
-      left:0;right:0;top:52%;
+      left:0; right:0;
+      top:52%;
       height:2px;
       background:linear-gradient(90deg,var(--arc-cyan),var(--arc-violet));
       transform:translateY(-50%);
       border-radius:999px;
+      pointer-events:none;
     }
 
-    @media(max-width:1200px){.columns{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:800px){.columns{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:520px){.columns{grid-template-columns:1fr}}
+    .hint{
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+      padding: 0 2px;
+    }
   </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-<!-- ===== HEADER ===== -->
-<header class="arc-header">
-  <div class="arc-hero">
-    <img src="../images/arcraiders/IMG_0817.jpeg" alt="ARC Raiders Banner">
-    <div class="arc-overlay">
-      <div class="arc-text">
+    <!-- ===== HEADER ===== -->
+    <header class="arc-header">
+      <div class="arc-hero">
+        <img src="../images/arcraiders/IMG_0817.jpeg" alt="ARC Raiders Banner">
+      </div>
+
+      <div class="arc-text-below">
         <h1>ARC RAIDERS <span>–</span> QUESTS</h1>
         <div class="arc-sub">MrNic5Guy’s Guild</div>
       </div>
+    </header>
+
+    <!-- ===== QUEST GIVERS (expand/collapse) ===== -->
+    <section class="accordion">
+
+      <!-- SHANI -->
+      <details class="giver" open>
+        <summary>
+          <div class="avatar"><img src="../images/arcraiders/IMG_0811.jpeg" alt="Shani"></div>
+          <div class="giver-title">
+            <h2>Shani</h2>
+            <span>Quest Chain</span>
+          </div>
+          <div class="chev">⌄</div>
+        </summary>
+        <div class="quests">
+          <ol>
+            <li class="q"><input type="checkbox"><a href="#">Picking Up the Pieces</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Clearer Skies</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Trash Into Treasure</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Off the Radar</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Hatch Repairs</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Down to Earth</a></li>
+            <li class="q"><input type="checkbox"><a href="#">The Trifecta</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Dormant Barons</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A Lay of the Land</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Reduced to Rubble</a></li>
+            <li class="q"><input type="checkbox"><a href="#">With a Trace</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Out of the Shadows</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Eyes in the Sky</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Our Presence Up There</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Communication Hideout</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Into the Fray</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Lost in Transmission</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Armored Transports</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Cold Storage</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A Toxic Trail</a></li>
+            <li class="q"><input type="checkbox"><a href="#">The Stench of Corruption</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Deciphering the Data</a></li>
+          </ol>
+        </div>
+      </details>
+
+      <!-- CELESTE -->
+      <details class="giver">
+        <summary>
+          <div class="avatar"><img src="../images/arcraiders/IMG_0812.jpeg" alt="Celeste"></div>
+          <div class="giver-title">
+            <h2>Celeste</h2>
+            <span>Quest Chain</span>
+          </div>
+          <div class="chev">⌄</div>
+        </summary>
+        <div class="quests">
+          <ol>
+            <li class="q"><input type="checkbox"><a href="#">A Bad Feeling</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Greasing Her Palms</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Straight Record</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Keeping the Memory</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Echoes of Victory Ridge</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A Symbol of Unification</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Celeste’s Journals</a></li>
+            <li class="q"><input type="checkbox"><a href="#">After Rain Comes</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A Balanced Harvest</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Untended Garden</a></li>
+            <li class="q"><input type="checkbox"><a href="#">The Root of the Matter</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Water Troubles</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Source of the Contamination</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Switching the Supply</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Power Out</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Flickering Threat</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Bees!</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Tribute to Toledo</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Digging Up Dirt</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Turnabout</a></li>
+          </ol>
+        </div>
+      </details>
+
+      <!-- TIAN WEN -->
+      <details class="giver">
+        <summary>
+          <div class="avatar"><img src="../images/arcraiders/IMG_0813.jpeg" alt="Tian Wen"></div>
+          <div class="giver-title">
+            <h2>Tian Wen</h2>
+            <span>Quest Chain</span>
+          </div>
+          <div class="chev">⌄</div>
+        </summary>
+        <div class="quests">
+          <ol>
+            <li class="q"><input type="checkbox"><a href="#">The Right Tool</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A Better Use</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Mixed Signals</a></li>
+            <li class="q"><input type="checkbox"><a href="#">What We Left Behind</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Broken Monument</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Marked for Death</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Market Correction</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Eyes on the Prize</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Industrial Espionage</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Unexpected Initiative</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Back on Top</a></li>
+            <li class="q"><input type="checkbox"><a href="#">The Major’s Footlocker</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Snap and Salvage</a></li>
+          </ol>
+        </div>
+      </details>
+
+      <!-- APOLLO -->
+      <details class="giver">
+        <summary>
+          <div class="avatar"><img src="../images/arcraiders/IMG_0814.jpeg" alt="Apollo"></div>
+          <div class="giver-title">
+            <h2>Apollo</h2>
+            <span>Quest Chain</span>
+          </div>
+          <div class="chev">⌄</div>
+        </summary>
+        <div class="quests">
+          <ol>
+            <li class="q"><input type="checkbox"><a href="#">Safe Passage</a></li>
+            <li class="q"><input type="checkbox"><a href="#">What Goes Around</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Sparks Fly</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A First Foothold</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A Warm Place to Rest</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Espresso</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Building a Library</a></li>
+            <li class="q"><input type="checkbox"><a href="#">The Clean Dream</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Paving the Way</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Groundbreaking</a></li>
+          </ol>
+        </div>
+      </details>
+
+      <!-- LANCE -->
+      <details class="giver">
+        <summary>
+          <div class="avatar"><img src="../images/arcraiders/IMG_0815.jpeg" alt="Lance"></div>
+          <div class="giver-title">
+            <h2>Lance</h2>
+            <span>Quest Chain</span>
+          </div>
+          <div class="chev">⌄</div>
+        </summary>
+        <div class="quests">
+          <ol>
+            <li class="q"><input type="checkbox"><a href="#">Doctor’s Orders</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Medical Merchandise</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A Reveal in Ruins</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Prescriptions of the Past</a></li>
+            <li class="q"><input type="checkbox"><a href="#">Life of a Pharmacist</a></li>
+            <li class="q"><input type="checkbox"><a href="#">A New Type of Plant</a></li>
+            <li class="q"><input type="checkbox"><a href="#">In My Image</a></li>
+          </ol>
+        </div>
+      </details>
+
+    </section>
+
+    <div class="hint">
+      Tip: Later, replace any <span style="font-family:var(--mono)">href="#"</span> with your YouTube tutorial link for that quest.
     </div>
+
   </div>
-</header>
 
-<!-- ===== QUESTS ===== -->
-<section class="columns">
-
-<!-- SHANI -->
-<div class="col">
-  <div class="col-head">
-    <div class="avatar"><img src="../images/arcraiders/IMG_0811.jpeg"></div>
-    <div class="giver"><h2>Shani</h2><span>Quest Chain</span></div>
-  </div>
-  <div class="quests"><ol>
-    <li class="q"><input type="checkbox"><a href="#">Picking Up the Pieces</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Clearer Skies</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Trash Into Treasure</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Off the Radar</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Hatch Repairs</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Down to Earth</a></li>
-    <li class="q"><input type="checkbox"><a href="#">The Trifecta</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Dormant Barons</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A Lay of the Land</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Reduced to Rubble</a></li>
-    <li class="q"><input type="checkbox"><a href="#">With a Trace</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Out of the Shadows</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Eyes in the Sky</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Our Presence Up There</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Communication Hideout</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Into the Fray</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Lost in Transmission</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Armored Transports</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Cold Storage</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A Toxic Trail</a></li>
-    <li class="q"><input type="checkbox"><a href="#">The Stench of Corruption</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Deciphering the Data</a></li>
-  </ol></div>
-</div>
-
-<!-- CELESTE -->
-<div class="col">
-  <div class="col-head">
-    <div class="avatar"><img src="../images/arcraiders/IMG_0812.jpeg"></div>
-    <div class="giver"><h2>Celeste</h2><span>Quest Chain</span></div>
-  </div>
-  <div class="quests"><ol>
-    <li class="q"><input type="checkbox"><a href="#">A Bad Feeling</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Greasing Her Palms</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Straight Record</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Keeping the Memory</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Echoes of Victory Ridge</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A Symbol of Unification</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Celeste’s Journals</a></li>
-    <li class="q"><input type="checkbox"><a href="#">After Rain Comes</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A Balanced Harvest</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Untended Garden</a></li>
-    <li class="q"><input type="checkbox"><a href="#">The Root of the Matter</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Water Troubles</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Source of the Contamination</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Switching the Supply</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Power Out</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Flickering Threat</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Bees!</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Tribute to Toledo</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Digging Up Dirt</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Turnabout</a></li>
-  </ol></div>
-</div>
-
-<!-- TIAN WEN -->
-<div class="col">
-  <div class="col-head">
-    <div class="avatar"><img src="../images/arcraiders/IMG_0813.jpeg"></div>
-    <div class="giver"><h2>Tian Wen</h2><span>Quest Chain</span></div>
-  </div>
-  <div class="quests"><ol>
-    <li class="q"><input type="checkbox"><a href="#">The Right Tool</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A Better Use</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Mixed Signals</a></li>
-    <li class="q"><input type="checkbox"><a href="#">What We Left Behind</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Broken Monument</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Marked for Death</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Market Correction</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Eyes on the Prize</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Industrial Espionage</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Unexpected Initiative</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Back on Top</a></li>
-    <li class="q"><input type="checkbox"><a href="#">The Major’s Footlocker</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Snap and Salvage</a></li>
-  </ol></div>
-</div>
-
-<!-- APOLLO -->
-<div class="col">
-  <div class="col-head">
-    <div class="avatar"><img src="../images/arcraiders/IMG_0814.jpeg"></div>
-    <div class="giver"><h2>Apollo</h2><span>Quest Chain</span></div>
-  </div>
-  <div class="quests"><ol>
-    <li class="q"><input type="checkbox"><a href="#">Safe Passage</a></li>
-    <li class="q"><input type="checkbox"><a href="#">What Goes Around</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Sparks Fly</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A First Foothold</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A Warm Place to Rest</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Espresso</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Building a Library</a></li>
-    <li class="q"><input type="checkbox"><a href="#">The Clean Dream</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Paving the Way</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Groundbreaking</a></li>
-  </ol></div>
-</div>
-
-<!-- LANCE -->
-<div class="col">
-  <div class="col-head">
-    <div class="avatar"><img src="../images/arcraiders/IMG_0815.jpeg"></div>
-    <div class="giver"><h2>Lance</h2><span>Quest Chain</span></div>
-  </div>
-  <div class="quests"><ol>
-    <li class="q"><input type="checkbox"><a href="#">Doctor’s Orders</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Medical Merchandise</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A Reveal in Ruins</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Prescriptions of the Past</a></li>
-    <li class="q"><input type="checkbox"><a href="#">Life of a Pharmacist</a></li>
-    <li class="q"><input type="checkbox"><a href="#">A New Type of Plant</a></li>
-    <li class="q"><input type="checkbox"><a href="#">In My Image</a></li>
-  </ol></div>
-</div>
-
-</section>
-</div>
-
-<script>
-document.querySelectorAll('.q input').forEach(cb=>{
-  cb.addEventListener('change',()=>{
-    cb.closest('.q').classList.toggle('done',cb.checked);
-  });
-});
-</script>
-
+  <script>
+    // Checkbox strike-through (visual)
+    document.querySelectorAll('.q input').forEach(cb => {
+      cb.addEventListener('change', () => {
+        cb.closest('.q').classList.toggle('done', cb.checked);
+      });
+    });
+  </script>
 </body>
 </html>
