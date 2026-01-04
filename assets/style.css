@@ -1,7 +1,3 @@
-/* /assets/style.css — Premium shared styles for LocalRentalSearch
-   Includes: mobile-first layout, listing cards, photo preview, fullscreen gallery modal,
-   and hard overflow protection (prevents “page shrink/off” issues). */
-
 :root{
   --bg:#0e1326;
   --bg2:#0b1020;
@@ -18,10 +14,15 @@
   --border:rgba(255,255,255,.08);
 
   --shadow-card:0 12px 40px rgba(0,0,0,.45);
-  --shadow-soft:0 8px 28px rgba(0,0,0,.35);
+
+  /* status */
+  --ok:#31d0aa;
+  --warn:#f2c14e;
+  --bad:#ff6b8b;
+  --info:#7fc2ff;
 }
 
-/* ===== HARD STOP: prevent horizontal overflow that makes pages “shrink/off” ===== */
+/* HARD STOP: prevent page overflow */
 *{box-sizing:border-box}
 html,body{
   margin:0;
@@ -30,23 +31,21 @@ html,body{
   max-width:100%;
   overflow-x:hidden;
 }
-img,svg,video,canvas{
+img,video,svg,canvas{
   max-width:100%;
   height:auto;
   display:block;
 }
 
-/* ===== BASE ===== */
+/* BASE */
 body{
   font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  background: linear-gradient(180deg,var(--bg),var(--bg2));
   color:var(--text);
   line-height:1.55;
 }
 
 a{color:inherit;text-decoration:none}
-a:hover{text-decoration:none}
-
 .container{
   max-width:1120px;
   margin:0 auto;
@@ -54,14 +53,13 @@ a:hover{text-decoration:none}
   overflow-x:clip;
 }
 
-/* ===== NAV ===== */
+/* NAV */
 .nav{
   position:sticky;
   top:0;
   z-index:20;
   background:rgba(14,19,38,.82);
   backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border-bottom:1px solid var(--border);
 }
 .nav-inner{
@@ -69,7 +67,6 @@ a:hover{text-decoration:none}
   flex-direction:column;
   gap:12px;
   padding:14px 0;
-  min-width:0;
 }
 @media(min-width:900px){
   .nav-inner{
@@ -83,7 +80,6 @@ a:hover{text-decoration:none}
   align-items:center;
   gap:12px;
   font-weight:900;
-  letter-spacing:.3px;
 }
 .logo{
   width:36px;
@@ -91,13 +87,11 @@ a:hover{text-decoration:none}
   border-radius:12px;
   background:linear-gradient(135deg,var(--accent),var(--accent-soft));
   box-shadow:0 6px 22px rgba(90,167,255,.35);
-  flex:0 0 auto;
 }
 .nav-links{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  min-width:0;
 }
 .pill{
   padding:8px 14px;
@@ -105,59 +99,34 @@ a:hover{text-decoration:none}
   border:1px solid var(--border);
   background:rgba(255,255,255,.04);
   font-weight:650;
-  white-space:nowrap;
 }
-.pill:hover{
-  background:rgba(255,255,255,.08);
-}
+.pill:hover{background:rgba(255,255,255,.08)}
 
-/* ===== HERO / SECTIONS ===== */
+/* LAYOUT */
 .hero{padding:28px 0 10px}
 .section{padding:20px 0}
-
-h1{
-  font-size:34px;
-  line-height:1.1;
-  margin:0 0 10px;
-}
-@media(min-width:700px){
-  h1{font-size:40px}
-}
-h2{
-  font-size:21px;
-  margin:0 0 10px;
-}
+h1{font-size:34px;margin:0 0 10px}
+@media(min-width:700px){h1{font-size:40px}}
+h2{font-size:21px;margin:0 0 10px}
 p{margin:0 0 10px}
 ul{margin:10px 0 0 18px}
 
-.lead{
-  color:var(--muted);
-  font-size:16px;
-  max-width:760px;
-}
-
+.lead{color:var(--muted);font-size:16px}
 .muted{color:var(--muted)}
 .strong{font-weight:900}
 
-.hr{
-  height:1px;
-  background:var(--border);
-  margin:20px 0;
-}
+.hr{height:1px;background:var(--border);margin:20px 0}
 
-/* ===== CARDS ===== */
+/* CARDS */
 .card{
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:18px;
   box-shadow:var(--shadow-card);
-  overflow:hidden;
-  min-width:0;
 }
-.card.soft{background:var(--surface-soft)}
 .pad{padding:18px}
 
-/* ===== BADGES ===== */
+/* BADGES */
 .badge{
   display:inline-flex;
   align-items:center;
@@ -169,49 +138,107 @@ ul{margin:10px 0 0 18px}
   border-radius:999px;
   border:1px solid var(--border);
   background:rgba(255,255,255,.03);
-  max-width:100%;
 }
 
-/* ===== LISTINGS ===== */
-#cards{display:grid;gap:16px;min-width:0}
+/* status badges */
+.badge.status{
+  color:var(--text);
+  border-color:rgba(255,255,255,.10);
+}
+.badge.status.available{background:rgba(49,208,170,.10); border-color:rgba(49,208,170,.22)}
+.badge.status.pending{background:rgba(242,193,78,.10); border-color:rgba(242,193,78,.22)}
+.badge.status.waitlist{background:rgba(127,194,255,.10); border-color:rgba(127,194,255,.22)}
+.badge.status.filled{background:rgba(255,107,139,.10); border-color:rgba(255,107,139,.22)}
+.badge.status.demo{background:rgba(255,255,255,.06)}
+
+/* LISTINGS */
+#cards{
+  display:grid;
+  gap:16px;
+}
 .listing-meta{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
-  align-items:center;
   justify-content:space-between;
-  min-width:0;
+  align-items:center;
 }
 
-/* ===== PHOTO PREVIEW ===== */
+/* FILTERS */
+.filters{
+  display:grid;
+  gap:10px;
+}
+.filters-row{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+}
+@media(min-width:760px){
+  .filters-row{grid-template-columns: 2fr 1fr 1fr 1fr;}
+}
+.field label{
+  display:block;
+  font-size:12px;
+  color:var(--muted);
+  margin:0 0 6px;
+}
+.field input,
+.field select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  color:var(--text);
+  outline:none;
+}
+.field input::placeholder{color:rgba(168,179,217,.70)}
+.actions-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.btn{
+  padding:10px 14px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+  color:var(--text);
+  font-weight:800;
+  cursor:pointer;
+}
+.btn:hover{background:rgba(255,255,255,.08)}
+.small{
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* PHOTO PREVIEW */
 .photo-preview{
   margin-top:12px;
   border-radius:16px;
   overflow:hidden;
   border:1px solid var(--border);
   background:#0b1020;
-  width:100%;
-  max-width:100%;
 }
 .photo-preview button{
   all:unset;
   display:block;
   width:100%;
-  max-width:100%;
   cursor:pointer;
 }
 .photo-preview img{
   width:100%;
-  max-width:100%;
   height:180px;
   object-fit:cover;
-  display:block;
 }
 @media(min-width:650px){
   .photo-preview img{height:220px}
 }
 
-/* ===== FULLSCREEN GALLERY MODAL ===== */
+/* MODAL */
 .modal{
   position:fixed;
   inset:0;
@@ -228,26 +255,15 @@ ul{margin:10px 0 0 18px}
   flex-direction:column;
   gap:12px;
   padding:16px;
-  min-width:0;
 }
-
 .modal-top{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:12px;
-  min-width:0;
-}
-.modal-title{
-  font-weight:900;
-  font-size:14px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
+  gap:10px;
 }
 .modal-close{
-  width:42px;
-  height:42px;
+  width:42px;height:42px;
   border-radius:12px;
   border:1px solid var(--border);
   background:rgba(255,255,255,.08);
@@ -255,8 +271,6 @@ ul{margin:10px 0 0 18px}
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  user-select:none;
-  flex:0 0 auto;
 }
 .modal-stage{
   flex:1;
@@ -264,22 +278,15 @@ ul{margin:10px 0 0 18px}
   overflow:hidden;
   border:1px solid var(--border);
   background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  min-height:240px;
 }
 .modal-stage img{
   width:100%;
   height:100%;
   object-fit:contain;
-  background:#000;
 }
-
 .modal-nav{
   display:flex;
   gap:10px;
-  align-items:center;
 }
 .modal-btn{
   flex:1;
@@ -289,10 +296,7 @@ ul{margin:10px 0 0 18px}
   background:rgba(255,255,255,.06);
   color:var(--text);
   font-weight:800;
-  cursor:pointer;
 }
-.modal-btn:hover{filter:brightness(1.06)}
-
 .modal-counter{
   min-width:110px;
   display:flex;
@@ -303,7 +307,7 @@ ul{margin:10px 0 0 18px}
   font-size:13px;
 }
 
-/* ===== FOOTER ===== */
+/* FOOTER */
 .footer{
   padding:32px 0 46px;
   color:var(--muted);
