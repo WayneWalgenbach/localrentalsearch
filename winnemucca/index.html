@@ -4,22 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>Winnemucca NV Rentals | Verified Availability Index</title>
-  <meta name="description" content="Winnemucca, NV rental availability index with clear status and recent confirmation. Demo listings are labeled until live verification coverage expands." />
+  <title>Winnemucca Rentals | Live Availability Index | LocalRentalSearch.com</title>
+  <meta name="description" content="Winnemucca, NV rentals with live availability signals. Browse apartments, houses, 1–2 bedroom rentals, under $1500, and verified listings." />
   <link rel="canonical" href="https://localrentalsearch.com/winnemucca/" />
 
   <link rel="stylesheet" href="../assets/style.css" />
-
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebPage",
-    "name":"Winnemucca NV Rentals",
-    "url":"https://localrentalsearch.com/winnemucca/",
-    "isPartOf":{"@type":"WebSite","name":"Local Rental Search","url":"https://localrentalsearch.com/"},
-    "inLanguage":"en"
-  }
-  </script>
 </head>
 
 <body>
@@ -27,14 +16,13 @@
 <div class="nav">
   <div class="container nav-inner">
     <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
+      <div class="logo"></div>
       <a href="../">Local Rental Search</a>
     </div>
     <div class="nav-links">
       <a class="pill" href="../">Home</a>
+      <a class="pill" href="#browse">Browse</a>
       <a class="pill" href="#listings">Listings</a>
-      <a class="pill" href="#verify">Verification</a>
-      <a class="pill" href="#faq">FAQ</a>
     </div>
   </div>
 </div>
@@ -42,123 +30,57 @@
 <header class="hero">
   <div class="container">
     <div class="card pad">
-      <span class="badge">Winnemucca, NV • Verification-first</span>
+      <span class="badge">Winnemucca, NV • Live Availability Index</span>
       <h1>Winnemucca Rentals</h1>
       <p class="lead">
-        This page is built to reduce dead listings by showing <strong>status</strong> and <strong>recency</strong>.
-        Listings may be labeled <strong>Demo</strong> until they are confirmed and time-stamped.
+        LocalRentalSearch is building the most current rental availability index for Winnemucca.
+        Listings show <span class="strong">status</span> and (when confirmed) <span class="strong">verification timestamps</span>.
       </p>
+
       <div class="hr"></div>
-      <p class="muted" style="margin:0;">
-        We are not a property manager or broker. We do not collect application fees, deposits, or rent.
-      </p>
+
+      <div id="browse">
+        <h2>Browse Winnemucca Rentals</h2>
+        <p class="lead">Pick the page that matches what you’re searching for:</p>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a class="pill" href="./apartments/">Apartments in Winnemucca</a>
+          <a class="pill" href="./houses/">Houses for Rent in Winnemucca</a>
+          <a class="pill" href="./1-bedroom/">1 Bedroom Rentals in Winnemucca</a>
+          <a class="pill" href="./2-bedroom/">2 Bedroom Rentals in Winnemucca</a>
+          <a class="pill" href="./under-1500/">Rentals Under $1500 in Winnemucca</a>
+          <a class="pill" href="./verified-today/">Verified Today in Winnemucca</a>
+        </div>
+
+        <div class="hr"></div>
+
+        <p class="lead" style="margin-bottom:0;">
+          Why this exists: national listing sites often show stale inventory. This index is designed to stay current by
+          tracking availability status and verification signals locally.
+        </p>
+      </div>
     </div>
   </div>
 </header>
 
 <main class="container">
 
-  <section id="listings" class="section">
-    <div class="card pad">
-      <h2>Listings</h2>
+<section id="listings" class="section">
+  <div class="card pad">
+    <h2>All Listings</h2>
+    <p class="lead">This view shows every listing currently in the Winnemucca dataset.</p>
 
-      <div class="filters" aria-label="Filters">
-        <div class="filters-row">
-          <div class="field">
-            <label for="q">Keyword</label>
-            <input id="q" type="search" placeholder="e.g., 2 bed, pet friendly, apartment" autocomplete="off" />
-          </div>
+    <div id="cards"></div>
 
-          <div class="field">
-            <label for="beds">Beds</label>
-            <select id="beds">
-              <option value="">Any</option>
-              <option value="0">Studio</option>
-              <option value="1">1+</option>
-              <option value="2">2+</option>
-              <option value="3">3+</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="maxPrice">Max price</label>
-            <select id="maxPrice">
-              <option value="">No limit</option>
-              <option value="1000">$1,000</option>
-              <option value="1200">$1,200</option>
-              <option value="1400">$1,400</option>
-              <option value="1600">$1,600</option>
-              <option value="1800">$1,800</option>
-              <option value="2200">$2,200</option>
-              <option value="3000">$3,000</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="status">Status</label>
-            <select id="status">
-              <option value="">Any</option>
-              <option value="available">Available</option>
-              <option value="pending">Pending</option>
-              <option value="waitlist">Waitlist</option>
-              <option value="filled">Filled</option>
-              <option value="demo">Demo</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="actions-row">
-          <button class="btn" id="clearBtn" type="button">Clear</button>
-          <div class="small" id="resultsMeta" aria-live="polite"></div>
-        </div>
-      </div>
-
-      <div class="hr"></div>
-
-      <div id="cards"></div>
-
-      <div class="hr"></div>
-      <span class="badge">Tip: prioritize listings with “Verified within 72 hours”.</span>
-    </div>
-  </section>
-
-  <section id="verify" class="section">
-    <div class="card pad">
-      <h2>How Verification Works</h2>
-      <ul>
-        <li><strong>Status-first:</strong> every listing is labeled Available / Pending / Waitlist / Filled (or Demo until confirmed).</li>
-        <li><strong>Recency:</strong> verified listings show a timestamp and expire if not re-confirmed.</li>
-        <li><strong>AI-assisted ops:</strong> we use AI internally to clean messy listing text and draft verification outreach, then publish only what’s clear.</li>
-      </ul>
-      <p class="muted">
-        If you need a listing added/updated/removed, email:
-        <a href="mailto:listings@localrentalsearch.com">listings@localrentalsearch.com</a>
-      </p>
-    </div>
-  </section>
-
-  <section id="faq" class="section">
-    <div class="card pad">
-      <h2>FAQ</h2>
-
-      <p><strong>Are all listings verified?</strong><br />
-        Not yet. Listings are labeled either <strong>Demo</strong> or <strong>Verified</strong> with a recency window.
-      </p>
-
-      <p><strong>Do you take applications or money?</strong><br />
-        No. Local Rental Search does not collect application fees, deposits, or rent.
-      </p>
-
-      <p><strong>What should I trust most on the page?</strong><br />
-        Status + the “Verified within” timestamp. If a listing is not verified recently, treat it as informational only.
-      </p>
-    </div>
-  </section>
-
-  <footer class="footer">
     <div class="hr"></div>
-    <div>© <span id="yr"></span> Local Rental Search</div>
-  </footer>
+    <span class="badge">Tip: “Verified Today” is the strongest freshness signal</span>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="hr"></div>
+  <div>© <span id="yr"></span> Local Rental Search</div>
+</footer>
 
 </main>
 
@@ -167,15 +89,15 @@
   <div class="modal-inner">
     <div class="modal-top">
       <strong id="modalTitle">Photos</strong>
-      <div class="modal-close" id="modalClose" role="button" aria-label="Close">X</div>
+      <div class="modal-close" id="modalClose">X</div>
     </div>
     <div class="modal-stage">
-      <img id="modalImg" alt="Listing photo" />
+      <img id="modalImg" />
     </div>
     <div class="modal-nav">
-      <button class="modal-btn" id="prevBtn" type="button">Prev</button>
+      <button class="modal-btn" id="prevBtn">Prev</button>
       <div class="modal-counter" id="modalCounter">1 / 1</div>
-      <button class="modal-btn" id="nextBtn" type="button">Next</button>
+      <button class="modal-btn" id="nextBtn">Next</button>
     </div>
   </div>
 </div>
