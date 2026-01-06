@@ -1,13 +1,9 @@
 document.getElementById("yr").textContent = new Date().getFullYear();
 
 const cards = document.getElementById("cards");
-
-// Optional page filter set by each page:
-// window.LRS_FILTER = { propertyType, beds, maxRent, verifiedWithinHours }
 const FILTER = window.LRS_FILTER || {};
 
 let listings = [];
-
 let currentPhotos = [];
 let currentIndex = 0;
 
@@ -43,11 +39,9 @@ document.getElementById("nextBtn").onclick = () => {
 };
 document.getElementById("modalClose").onclick = closeGallery;
 
-// Basic swipe support (mobile)
+// Swipe support
 let touchStartX = 0;
-modal.addEventListener("touchstart", (e) => {
-  touchStartX = e.touches[0].clientX;
-}, {passive:true});
+modal.addEventListener("touchstart", (e) => { touchStartX = e.touches[0].clientX; }, {passive:true});
 modal.addEventListener("touchend", (e) => {
   if (!currentPhotos.length) return;
   const dx = e.changedTouches[0].clientX - touchStartX;
@@ -63,8 +57,7 @@ function parseVerifiedAt(v){
 }
 function withinHours(d, hours){
   if (!d) return false;
-  const ms = hours * 60 * 60 * 1000;
-  return (Date.now() - d.getTime()) <= ms;
+  return (Date.now() - d.getTime()) <= (hours * 3600000);
 }
 function normalizeStatus(s){
   const v = String(s || "").toLowerCase().trim();
@@ -82,7 +75,6 @@ function applyFilter(list){
     if (FILTER.propertyType && String(l.propertyType || "").toLowerCase() !== String(FILTER.propertyType).toLowerCase()) return false;
     if (typeof FILTER.beds === "number" && Number(l.beds) !== FILTER.beds) return false;
     if (typeof FILTER.maxRent === "number" && Number(l.rent) > FILTER.maxRent) return false;
-
     if (typeof FILTER.verifiedWithinHours === "number") {
       const d = parseVerifiedAt(l.verifiedAt);
       if (!withinHours(d, FILTER.verifiedWithinHours)) return false;
@@ -90,20 +82,14 @@ function applyFilter(list){
     return true;
   });
 }
-
 function escapeHtml(str){
   return String(str ?? "").replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
   }[m]));
 }
 
 function renderCards(list){
   cards.innerHTML = "";
-
   if (!list.length) {
     const empty = document.createElement("div");
     empty.className = "card pad";
@@ -125,9 +111,7 @@ function renderCards(list){
       status === "pending" ? "Pending" :
       status === "filled" ? "Filled" : "Unverified";
 
-    const verifiedLabel = verifiedDate
-      ? `Verified ${verifiedDate.toLocaleString()}`
-      : "Not recently verified";
+    const verifiedLabel = verifiedDate ? `Verified ${verifiedDate.toLocaleString()}` : "Not recently verified";
 
     const photos = Array.isArray(listing.photos) ? listing.photos : [];
     const firstPhoto = photos[0] || "https://picsum.photos/seed/lrsfallback/1200/800";
@@ -171,19 +155,9 @@ function renderCards(list){
   });
 }
 
-function getListingsJsonPath(){
-  // If we're on /winnemucca/ use ./listings.json
-  // If we're on /winnemucca/<subpage>/ use ../listings.json
-  const p = (location.pathname || "").toLowerCase();
-  const inWinn = p.includes("/winnemucca/");
-  const isWinnRoot = p.endsWith("/winnemucca/");
-
-  if (inWinn && !isWinnRoot) return "../listings.json";
-  return "./listings.json";
-}
-
 async function loadListings(){
-  const jsonPath = getListingsJsonPath();
+  // Absolute path so subpages always work:
+  const jsonPath = "/winnemucca/listings.json";
 
   try{
     const res = await fetch(jsonPath, { cache: "no-store" });
@@ -202,14 +176,13 @@ async function loadListings(){
   })).sort((a,b) => {
     const av = a._verified ? a._verified.getTime() : 0;
     const bv = b._verified ? b._verified.getTime() : 0;
-    if (av !== bv) return bv - av; // newest verified first
+    if (av !== bv) return bv - av;
     const sr = statusRank(a._status) - statusRank(b._status);
     if (sr !== 0) return sr;
     return Number(a.rent || 0) - Number(b.rent || 0);
   });
 
-  const filtered = applyFilter(listings);
-  renderCards(filtered);
+  renderCards(applyFilter(listings));
 }
 
 loadListings();
