@@ -1,0 +1,35 @@
+[
+  {
+    "id": "winn-demo-001",
+    "status": "demo",
+    "unit": "#12",
+    "beds": 1,
+    "baths": 1,
+    "rent": 1400,
+    "address": "Example Apartment — Winnemucca, NV",
+    "notes": ["Demo listing", "Deposit: Demo", "Pets: Demo"],
+    "verifiedAt": null,
+    "expiresHours": 72,
+    "photos": [
+      "https://picsum.photos/seed/winn1/1200/800",
+      "https://picsum.photos/seed/winn2/1200/800",
+      "https://picsum.photos/seed/winn3/1200/800"
+    ]
+  },
+  {
+    "id": "winn-demo-002",
+    "status": "available",
+    "unit": "—",
+    "beds": 2,
+    "baths": 1,
+    "rent": 1600,
+    "address": "Sample Verified Listing — Winnemucca (Example)",
+    "notes": ["Verified example entry", "Pets: Ask", "Utilities: Varies"],
+    "verifiedAt": "2026-01-05T00:00:00Z",
+    "expiresHours": 72,
+    "photos": [
+      "https://picsum.photos/seed/winnv1/1200/800",
+      "https://picsum.photos/seed/winnv2/1200/800"
+    ]
+  }
+]
