@@ -1,20 +1,20 @@
 [
   {
     "id": "winn-demo-001",
-    "status": "demo",
+    "status": "available",
     "unit": "#12",
     "beds": 1,
     "baths": 1,
     "rent": 1400,
     "address": "Example Apartment — Winnemucca, NV",
     "notes": [
-      "Demo listing",
+      "Demo listing (for onboarding demos)",
       "Deposit: Demo",
       "Pets: Demo"
     ],
-    "verifiedAt": null,
+    "verifiedAt": "2026-01-05T00:00:00Z",
     "expiresHours": 72,
-    "contactEmail": "demo-owner@example.com",
+    "contactEmail": "wmw13foxtrot@gmail.com",
     "verificationKey": "winn-demo-001-a9f3kq",
     "photos": [
       "https://picsum.photos/seed/winn1/1200/800",
