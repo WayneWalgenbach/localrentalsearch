@@ -4,67 +4,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="robots" content="index, follow">
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "ItemList",
-  "name": "Winnemucca NV Rental Listings",
-  "description": "Current apartment and housing rentals in Winnemucca, Nevada with live availability status.",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "item": {
-        "@type": "Apartment",
-        "name": "Demo Apartment A — Winnemucca, NV",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Winnemucca",
-          "addressRegion": "NV",
-          "addressCountry": "US"
-        },
-        "numberOfBedrooms": 1,
-        "numberOfBathroomsTotal": 1,
-        "leaseLength": "P12M",
-        "petsAllowed": false,
-        "offers": {
-          "@type": "Offer",
-          "price": "1400",
-          "priceCurrency": "USD",
-          "availability": "https://schema.org/InStock"
-        }
-      }
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "item": {
-        "@type": "Apartment",
-        "name": "Demo Apartment B — Winnemucca, NV",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Winnemucca",
-          "addressRegion": "NV",
-          "addressCountry": "US"
-        },
-        "numberOfBedrooms": 2,
-        "numberOfBathroomsTotal": 1,
-        "leaseLength": "P6M",
-        "petsAllowed": true,
-        "offers": {
-          "@type": "Offer",
-          "price": "1650",
-          "priceCurrency": "USD",
-          "availability": "https://schema.org/PreOrder"
-        }
-      }
-    }
-  ]
-}
-</script>
 
-  <title>Winnemucca Rentals | Live Availability Index | LocalRentalSearch.com</title>
-  <meta name="description" content="Winnemucca, NV rentals with live availability signals. Browse apartments, houses, 1–2 bedroom rentals, under $1500, and verified listings." />
+  <title>Winnemucca Rentals | Verified Availability Index | LocalRentalSearch.com</title>
+  <meta name="description" content="Winnemucca, NV rentals with status and verification timestamps. Browse apartments, houses, 1–2 bedrooms, under $1500, and verified listings." />
   <link rel="canonical" href="https://localrentalsearch.com/winnemucca/" />
 
   <link rel="stylesheet" href="../assets/style.css" />
@@ -81,7 +23,8 @@
     <div class="nav-links">
       <a class="pill" href="../">Home</a>
       <a class="pill" href="#browse">Browse</a>
-      <a class="pill" href="#listings">Listings</a>
+      <a class="pill" href="#owners">Owners</a>
+      <a class="pill" href="#listings">All</a>
     </div>
   </div>
 </div>
@@ -89,36 +32,74 @@
 <header class="hero">
   <div class="container">
     <div class="card pad">
-      <span class="badge">Winnemucca, NV • Live Availability Index</span>
+      <span class="badge badge-verified">Winnemucca, NV • Verified availability signals</span>
       <h1>Winnemucca Rentals</h1>
       <p class="lead">
-        LocalRentalSearch is building the most current rental availability index for Winnemucca.
-        Listings show <span class="strong">status</span> and (when confirmed) <span class="strong">verification timestamps</span>.
+        This page is built for one thing: clarity. Listings show status (Available / Pending / Filled) and verification
+        timestamps so renters stop chasing dead inventory.
       </p>
+
       <p class="muted">Last updated: <time datetime="2026-01-06">January 6, 2026</time></p>
 
       <div class="hr"></div>
 
       <div id="browse">
-        <h2>Browse Winnemucca Rentals</h2>
-        <p class="lead">Pick the page that matches what you’re searching for:</p>
+        <h2>Browse by what matters</h2>
+        <p class="lead">Fast filters for the most common renter searches:</p>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <a class="pill" href="./apartments/">Apartments in Winnemucca</a>
-          <a class="pill" href="./houses/">Houses for Rent in Winnemucca</a>
-          <a class="pill" href="./1-bedroom/">1 Bedroom Rentals in Winnemucca</a>
-          <a class="pill" href="./2-bedroom/">2 Bedroom Rentals in Winnemucca</a>
-          <a class="pill" href="./under-1500/">Rentals Under $1500 in Winnemucca</a>
-          <a class="pill" href="./verified-today/">Verified Today in Winnemucca</a>
+          <a class="btn" href="./apartments/">Apartments</a>
+          <a class="btn" href="./houses/">Houses</a>
+          <a class="btn" href="./1-bedroom/">1 Bedroom</a>
+          <a class="btn" href="./2-bedroom/">2 Bedroom</a>
+          <a class="btn" href="./under-1500/">Under $1500</a>
+          <a class="btn btn-primary" href="./verified-today/">Verified Today</a>
+        </div>
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="grid grid-2" id="owners">
+        <div class="callout">
+          <h2 style="margin-top:0;">For Renters</h2>
+          <ul class="lead">
+            <li>Prioritize “Verified Today” when you need speed.</li>
+            <li>If a listing is marked “Filled,” don’t waste your time messaging.</li>
+            <li>Status changes are the signal—not the marketing copy.</li>
+          </ul>
         </div>
 
-        <div class="hr"></div>
+        <div class="callout">
+          <h2 style="margin-top:0;">For Owners & Managers</h2>
+          <p class="lead">
+            We’re onboarding local listings now. The goal is to keep availability accurate without you managing
+            another dashboard.
+          </p>
+          <div class="stack">
+            <div class="kv">
+              <div class="k">How updates work</div>
+              <div class="v">Simple confirmations update listings instantly</div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <a class="btn" href="mailto:list@localrentalsearch.com?subject=Winnemucca%20Listing%20Request">Request listing</a>
+              <a class="btn" href="mailto:list@localrentalsearch.com?subject=Winnemucca%20Manager%20Questions">Ask questions</a>
+            </div>
+            <p class="muted" style="margin:0;">
+              Early onboarding is free while we finalize verification. Paid plans come later (SMS, priority, automation).
+            </p>
+          </div>
+        </div>
+      </div>
 
+      <div class="hr"></div>
+
+      <div class="callout">
+        <h2 style="margin-top:0;">Trust policy</h2>
         <p class="lead" style="margin-bottom:0;">
-          Why this exists: national listing sites often show stale inventory. This index is designed to stay current by
-          tracking availability status and verification signals locally.
+          Listings may be limited during onboarding. “Verified” timestamps are the primary trust signal used on this index.
         </p>
       </div>
+
     </div>
   </div>
 </header>
@@ -129,11 +110,7 @@
   <div class="card pad">
     <h2>All Listings</h2>
     <p class="lead">This view shows every listing currently in the Winnemucca dataset.</p>
-
     <div id="cards"></div>
-
-    <div class="hr"></div>
-    <span class="badge">Tip: “Verified Today” is the strongest freshness signal</span>
   </div>
 </section>
 
