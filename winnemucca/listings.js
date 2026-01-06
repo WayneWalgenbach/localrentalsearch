@@ -2,45 +2,6 @@ document.getElementById("yr").textContent = new Date().getFullYear();
 
 const HOURS = 60 * 60 * 1000;
 
-const listings = [
-  // Demo listing (not verified)
-  {
-    id: "demo-apt-12",
-    status: "demo", // demo | available | pending | waitlist | filled
-    unit: "#12",
-    beds: 1,
-    baths: 1,
-    rent: 1400,
-    address: "Example Apartment — Winnemucca, NV",
-    notes: ["Demo listing", "Policies: Demo", "Deposit: Demo"],
-    verifiedAt: null,          // ISO string when verified (e.g. "2026-01-04T20:15:00Z")
-    expiresHours: 72,
-    photos: [
-      "https://picsum.photos/seed/winn1/1200/800",
-      "https://picsum.photos/seed/winn2/1200/800",
-      "https://picsum.photos/seed/winn3/1200/800"
-    ]
-  },
-
-  // Example of what a verified listing looks like (keep or remove)
-  {
-    id: "verified-sample",
-    status: "available",
-    unit: "—",
-    beds: 2,
-    baths: 1,
-    rent: 1600,
-    address: "Sample Verified Listing — Winnemucca (Example)",
-    notes: ["Verified example entry", "Pets: Ask", "Utilities: Varies"],
-    verifiedAt: new Date(Date.now() - (18 * HOURS)).toISOString(), // verified ~18 hours ago
-    expiresHours: 72,
-    photos: [
-      "https://picsum.photos/seed/winnv1/1200/800",
-      "https://picsum.photos/seed/winnv2/1200/800"
-    ]
-  }
-];
-
 const cards = document.getElementById("cards");
 const resultsMeta = document.getElementById("resultsMeta");
 
@@ -51,7 +12,7 @@ const statusEl = document.getElementById("status");
 const clearBtn = document.getElementById("clearBtn");
 
 /* ---------------------------
-   Gallery (your existing UX)
+   Gallery (keeps your UX)
 ----------------------------*/
 let currentPhotos = [];
 let currentIndex = 0;
@@ -91,6 +52,39 @@ document.getElementById("nextBtn").onclick = () => {
 };
 document.getElementById("modalClose").onclick = closeGallery;
 modal.onclick = (e) => { if (e.target === modal) closeGallery(); };
+
+/* ---------------------------
+   Data load (NEW)
+----------------------------*/
+let listings = [];
+
+async function loadListings(){
+  try {
+    const res = await fetch("./listings.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed to load listings.json (${res.status})`);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error("listings.json must be an array");
+    listings = data;
+    apply();
+  } catch (err) {
+    renderError(err);
+  }
+}
+
+function renderError(err){
+  cards.innerHTML = "";
+  const div = document.createElement("div");
+  div.className = "card pad";
+  div.innerHTML = `
+    <div class="strong">Listings failed to load</div>
+    <p class="muted">This usually means listings.json is missing, invalid JSON, or the path is wrong.</p>
+    <div class="badge">Error: ${escapeHtml(err && err.message ? err.message : String(err))}</div>
+    <div class="hr"></div>
+    <p class="muted">Confirm this file exists: /winnemucca/listings.json</p>
+  `;
+  cards.appendChild(div);
+  if (resultsMeta) resultsMeta.textContent = "0 listings shown.";
+}
 
 /* ---------------------------
    Verification / Recency
@@ -162,17 +156,16 @@ function matchesFilters(listing, filters){
 
   if (filters.beds !== "") {
     const minBeds = Number(filters.beds);
-    if (listing.beds < minBeds) return false;
+    if (Number.isFinite(minBeds) && listing.beds < minBeds) return false;
   }
 
   if (filters.maxPrice !== "") {
     const maxP = Number(filters.maxPrice);
-    if (listing.rent > maxP) return false;
+    if (Number.isFinite(maxP) && listing.rent > maxP) return false;
   }
 
   if (filters.status !== "") {
     if (filters.status === "available") {
-      // Available filter should respect effective status (expired "available" becomes "pending")
       if (effectiveStatus(listing) !== "available") return false;
     } else {
       if (listing.status !== filters.status) return false;
@@ -184,10 +177,10 @@ function matchesFilters(listing, filters){
 
 function getFilters(){
   return {
-    q: qEl.value || "",
-    beds: bedsEl.value || "",
-    maxPrice: maxPriceEl.value || "",
-    status: statusEl.value || ""
+    q: qEl ? (qEl.value || "") : "",
+    beds: bedsEl ? (bedsEl.value || "") : "",
+    maxPrice: maxPriceEl ? (maxPriceEl.value || "") : "",
+    status: statusEl ? (statusEl.value || "") : ""
   };
 }
 
@@ -205,11 +198,11 @@ function renderCards(list){
       <p class="muted">Try clearing filters or using a broader keyword.</p>
     `;
     cards.appendChild(empty);
-    resultsMeta.textContent = "0 listings shown.";
+    if (resultsMeta) resultsMeta.textContent = "0 listings shown.";
     return;
   }
 
-  resultsMeta.textContent = `${list.length} listing${list.length === 1 ? "" : "s"} shown.`;
+  if (resultsMeta) resultsMeta.textContent = `${list.length} listing${list.length === 1 ? "" : "s"} shown.`;
 
   list.forEach(listing => {
     const rec = computeRecency(listing);
@@ -226,21 +219,21 @@ function renderCards(list){
     div.className = "card pad";
     div.innerHTML = `
       <div class="listing-meta">
-        <span class="badge status ${statusClass}">${statusText}</span>
-        <span class="badge">${fmtPrice(listing.rent)}</span>
+        <span class="badge status ${escapeAttr(statusClass)}">${escapeHtml(statusText)}</span>
+        <span class="badge">${escapeHtml(fmtPrice(listing.rent))}</span>
       </div>
 
-      <div class="strong">${listing.address}</div>
+      <div class="strong">${escapeHtml(listing.address)}</div>
 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
-        <span class="badge">${bedsLabel(listing.beds)} • ${listing.baths} bath</span>
+        <span class="badge">${escapeHtml(`${bedsLabel(listing.beds)} • ${listing.baths} bath`)}</span>
         ${verifiedBadge}
-        ${listing.unit && listing.unit !== "—" ? `<span class="badge">Unit ${listing.unit}</span>` : ``}
+        ${listing.unit && listing.unit !== "—" ? `<span class="badge">Unit ${escapeHtml(listing.unit)}</span>` : ``}
       </div>
 
       <div class="photo-preview">
-        <button type="button" aria-label="Open photos for ${escapeHtml(listing.address)}">
-          <img src="${listing.photos && listing.photos[0] ? listing.photos[0] : ""}" alt="Listing photo preview" loading="lazy" />
+        <button type="button" aria-label="Open photos for ${escapeAttr(listing.address)}">
+          <img src="${(listing.photos && listing.photos[0]) ? listing.photos[0] : ""}" alt="Listing photo preview" loading="lazy" />
         </button>
       </div>
 
@@ -263,18 +256,12 @@ function renderCards(list){
       </div>
     `;
 
+    div.querySelector("button").onclick = () => openGallery(listing);
     div.querySelector("[data-open]").onclick = () => openGallery(listing);
 
     cards.appendChild(div);
   });
 }
-
-function escapeHtml(str){
-  return String(str ?? "").replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[m]));
-}
-function escapeAttr(str){ return escapeHtml(str); }
 
 /* ---------------------------
    Copy details
@@ -282,8 +269,9 @@ function escapeAttr(str){ return escapeHtml(str); }
 document.addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-copy]");
   if (!btn) return;
+
   const id = btn.getAttribute("data-copy");
-  const listing = listings.find(x => x.id === id);
+  const listing = listings.find(x => String(x.id) === String(id));
   if (!listing) return;
 
   const rec = computeRecency(listing);
@@ -316,18 +304,30 @@ function apply(){
   renderCards(filtered);
 }
 
-qEl.addEventListener("input", apply);
-bedsEl.addEventListener("change", apply);
-maxPriceEl.addEventListener("change", apply);
-statusEl.addEventListener("change", apply);
+if (qEl) qEl.addEventListener("input", apply);
+if (bedsEl) bedsEl.addEventListener("change", apply);
+if (maxPriceEl) maxPriceEl.addEventListener("change", apply);
+if (statusEl) statusEl.addEventListener("change", apply);
 
-clearBtn.addEventListener("click", () => {
-  qEl.value = "";
-  bedsEl.value = "";
-  maxPriceEl.value = "";
-  statusEl.value = "";
-  apply();
-});
+if (clearBtn) {
+  clearBtn.addEventListener("click", () => {
+    if (qEl) qEl.value = "";
+    if (bedsEl) bedsEl.value = "";
+    if (maxPriceEl) maxPriceEl.value = "";
+    if (statusEl) statusEl.value = "";
+    apply();
+  });
+}
+
+/* ---------------------------
+   Helpers
+----------------------------*/
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, (m) => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
+function escapeAttr(str){ return escapeHtml(str); }
 
 /* init */
-apply();
+loadListings();
