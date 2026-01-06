@@ -1,19 +1,13 @@
 document.getElementById("yr").textContent = new Date().getFullYear();
 
-const HOURS = 60 * 60 * 1000;
-
 const cards = document.getElementById("cards");
-const resultsMeta = document.getElementById("resultsMeta");
 
-const qEl = document.getElementById("q");
-const bedsEl = document.getElementById("beds");
-const maxPriceEl = document.getElementById("maxPrice");
-const statusEl = document.getElementById("status");
-const clearBtn = document.getElementById("clearBtn");
+// Optional page filter set by each page:
+// window.LRS_FILTER = { propertyType, beds, maxRent, verifiedWithinHours }
+const FILTER = window.LRS_FILTER || {};
 
-/* ---------------------------
-   Gallery (keeps your UX)
-----------------------------*/
+let listings = [];
+
 let currentPhotos = [];
 let currentIndex = 0;
 
@@ -23,16 +17,13 @@ const modalCounter = document.getElementById("modalCounter");
 const modalTitle = document.getElementById("modalTitle");
 
 function openGallery(listing){
-  currentPhotos = listing.photos || [];
+  currentPhotos = (listing.photos || []).slice();
   currentIndex = 0;
-  modalTitle.textContent = listing.address || "Photos";
+  if (modalTitle) modalTitle.textContent = listing.address || "Photos";
   modal.classList.add("open");
   renderModal();
 }
-
-function closeGallery(){
-  modal.classList.remove("open");
-}
+function closeGallery(){ modal.classList.remove("open"); }
 
 function renderModal(){
   if (!currentPhotos.length) return;
@@ -51,142 +42,65 @@ document.getElementById("nextBtn").onclick = () => {
   renderModal();
 };
 document.getElementById("modalClose").onclick = closeGallery;
-modal.onclick = (e) => { if (e.target === modal) closeGallery(); };
 
-/* ---------------------------
-   Data load (NEW)
-----------------------------*/
-let listings = [];
+// Basic swipe support (mobile)
+let touchStartX = 0;
+modal.addEventListener("touchstart", (e) => {
+  touchStartX = e.touches[0].clientX;
+}, {passive:true});
+modal.addEventListener("touchend", (e) => {
+  if (!currentPhotos.length) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) < 40) return;
+  if (dx < 0) document.getElementById("nextBtn").click();
+  else document.getElementById("prevBtn").click();
+}, {passive:true});
 
-async function loadListings(){
-  try {
-    const res = await fetch("./listings.json", { cache: "no-store" });
-    if (!res.ok) throw new Error(`Failed to load listings.json (${res.status})`);
-    const data = await res.json();
-    if (!Array.isArray(data)) throw new Error("listings.json must be an array");
-    listings = data;
-    apply();
-  } catch (err) {
-    renderError(err);
-  }
+function parseVerifiedAt(v){
+  if (!v) return null;
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d;
 }
-
-function renderError(err){
-  cards.innerHTML = "";
-  const div = document.createElement("div");
-  div.className = "card pad";
-  div.innerHTML = `
-    <div class="strong">Listings failed to load</div>
-    <p class="muted">This usually means listings.json is missing, invalid JSON, or the path is wrong.</p>
-    <div class="badge">Error: ${escapeHtml(err && err.message ? err.message : String(err))}</div>
-    <div class="hr"></div>
-    <p class="muted">Confirm this file exists: /winnemucca/listings.json</p>
-  `;
-  cards.appendChild(div);
-  if (resultsMeta) resultsMeta.textContent = "0 listings shown.";
+function withinHours(d, hours){
+  if (!d) return false;
+  const ms = hours * 60 * 60 * 1000;
+  return (Date.now() - d.getTime()) <= ms;
 }
-
-/* ---------------------------
-   Verification / Recency
-----------------------------*/
-function hoursSince(iso){
-  if (!iso) return null;
-  const t = Date.parse(iso);
-  if (Number.isNaN(t)) return null;
-  return (Date.now() - t) / HOURS;
+function normalizeStatus(s){
+  const v = String(s || "").toLowerCase().trim();
+  if (v === "available" || v === "pending" || v === "filled") return v;
+  return "unknown";
 }
-
-function computeRecency(listing){
-  const h = hoursSince(listing.verifiedAt);
-  if (h === null) return { label: "Not verified", expired: false, hours: null };
-  const windowH = Number(listing.expiresHours || 72);
-  const expired = h > windowH;
-  const label = expired ? `Expired (${Math.floor(h)}h ago)` : `Verified within ${Math.floor(h)}h`;
-  return { label, expired, hours: h };
+function statusRank(status){
+  if (status === "available") return 0;
+  if (status === "pending") return 1;
+  if (status === "filled") return 2;
+  return 3;
 }
+function applyFilter(list){
+  return list.filter(l => {
+    if (FILTER.propertyType && String(l.propertyType || "").toLowerCase() !== String(FILTER.propertyType).toLowerCase()) return false;
+    if (typeof FILTER.beds === "number" && Number(l.beds) !== FILTER.beds) return false;
+    if (typeof FILTER.maxRent === "number" && Number(l.rent) > FILTER.maxRent) return false;
 
-// Non-destructive: if a listing is "available" but expired, treat as "pending" in UI
-function effectiveStatus(listing){
-  if (listing.status === "available") {
-    const rec = computeRecency(listing);
-    if (rec.expired) return "pending";
-  }
-  return listing.status;
-}
-
-function statusLabel(s){
-  const map = {
-    demo: "Demo",
-    available: "Available",
-    pending: "Pending",
-    waitlist: "Waitlist",
-    filled: "Filled"
-  };
-  return map[s] || "—";
-}
-
-function fmtPrice(n){
-  if (typeof n !== "number") return "—";
-  return `$${n.toLocaleString()}/mo`;
-}
-
-function bedsLabel(n){
-  if (n === 0) return "Studio";
-  if (n === 1) return "1 bed";
-  return `${n} beds`;
-}
-
-/* ---------------------------
-   Filtering
-----------------------------*/
-function matchesFilters(listing, filters){
-  const q = (filters.q || "").trim().toLowerCase();
-  if (q) {
-    const hay = [
-      listing.address,
-      listing.unit,
-      String(listing.rent),
-      String(listing.beds),
-      String(listing.baths),
-      (listing.notes || []).join(" "),
-      statusLabel(listing.status)
-    ].join(" ").toLowerCase();
-    if (!hay.includes(q)) return false;
-  }
-
-  if (filters.beds !== "") {
-    const minBeds = Number(filters.beds);
-    if (Number.isFinite(minBeds) && listing.beds < minBeds) return false;
-  }
-
-  if (filters.maxPrice !== "") {
-    const maxP = Number(filters.maxPrice);
-    if (Number.isFinite(maxP) && listing.rent > maxP) return false;
-  }
-
-  if (filters.status !== "") {
-    if (filters.status === "available") {
-      if (effectiveStatus(listing) !== "available") return false;
-    } else {
-      if (listing.status !== filters.status) return false;
+    if (typeof FILTER.verifiedWithinHours === "number") {
+      const d = parseVerifiedAt(l.verifiedAt);
+      if (!withinHours(d, FILTER.verifiedWithinHours)) return false;
     }
-  }
-
-  return true;
+    return true;
+  });
 }
 
-function getFilters(){
-  return {
-    q: qEl ? (qEl.value || "") : "",
-    beds: bedsEl ? (bedsEl.value || "") : "",
-    maxPrice: maxPriceEl ? (maxPriceEl.value || "") : "",
-    status: statusEl ? (statusEl.value || "") : ""
-  };
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, (m) => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[m]));
 }
 
-/* ---------------------------
-   Render
-----------------------------*/
 function renderCards(list){
   cards.innerHTML = "";
 
@@ -194,140 +108,108 @@ function renderCards(list){
     const empty = document.createElement("div");
     empty.className = "card pad";
     empty.innerHTML = `
-      <div class="strong">No matches</div>
-      <p class="muted">Try clearing filters or using a broader keyword.</p>
+      <span class="badge">No matches</span>
+      <h2 style="margin-top:10px">Nothing to show yet</h2>
+      <p class="lead">This page is live and ready. Listings will appear as they’re added and verified.</p>
     `;
     cards.appendChild(empty);
-    if (resultsMeta) resultsMeta.textContent = "0 listings shown.";
     return;
   }
 
-  if (resultsMeta) resultsMeta.textContent = `${list.length} listing${list.length === 1 ? "" : "s"} shown.`;
-
   list.forEach(listing => {
-    const rec = computeRecency(listing);
-    const effStatus = effectiveStatus(listing);
+    const status = normalizeStatus(listing.status);
+    const verifiedDate = parseVerifiedAt(listing.verifiedAt);
 
-    const statusClass = effStatus || "demo";
-    const statusText = statusLabel(effStatus);
+    const statusLabel =
+      status === "available" ? "Available" :
+      status === "pending" ? "Pending" :
+      status === "filled" ? "Filled" : "Unverified";
 
-    const verifiedBadge = listing.status === "demo"
-      ? `<span class="badge">Not verified</span>`
-      : `<span class="badge">${rec.label}</span>`;
+    const verifiedLabel = verifiedDate
+      ? `Verified ${verifiedDate.toLocaleString()}`
+      : "Not recently verified";
+
+    const photos = Array.isArray(listing.photos) ? listing.photos : [];
+    const firstPhoto = photos[0] || "https://picsum.photos/seed/lrsfallback/1200/800";
 
     const div = document.createElement("div");
     div.className = "card pad";
     div.innerHTML = `
       <div class="listing-meta">
-        <span class="badge status ${escapeAttr(statusClass)}">${escapeHtml(statusText)}</span>
-        <span class="badge">${escapeHtml(fmtPrice(listing.rent))}</span>
+        <span class="badge">${statusLabel}</span>
+        <span class="badge">$${Number(listing.rent || 0).toLocaleString()}/mo</span>
       </div>
 
-      <div class="strong">${escapeHtml(listing.address)}</div>
+      <div class="strong">${escapeHtml(listing.address || "")}</div>
 
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
-        <span class="badge">${escapeHtml(`${bedsLabel(listing.beds)} • ${listing.baths} bath`)}</span>
-        ${verifiedBadge}
-        ${listing.unit && listing.unit !== "—" ? `<span class="badge">Unit ${escapeHtml(listing.unit)}</span>` : ``}
+      <div class="listing-meta" style="margin-top:8px">
+        <span class="badge">${Number(listing.beds || 0)} bd • ${Number(listing.baths || 0)} ba</span>
+        <span class="badge">${escapeHtml(listing.propertyType || "Rental")}</span>
+      </div>
+
+      <div class="listing-meta" style="margin-top:8px">
+        <span class="badge">Unit: ${escapeHtml(listing.unit || "—")}</span>
+        <span class="badge">${escapeHtml(listing.leaseTerm || "Lease: —")}</span>
+      </div>
+
+      <div class="listing-meta" style="margin-top:8px">
+        <span class="badge">${escapeHtml(listing.pets || "Pets: —")}</span>
+        <span class="badge">${escapeHtml(verifiedLabel)}</span>
       </div>
 
       <div class="photo-preview">
-        <button type="button" aria-label="Open photos for ${escapeAttr(listing.address)}">
-          <img src="${(listing.photos && listing.photos[0]) ? listing.photos[0] : ""}" alt="Listing photo preview" loading="lazy" />
+        <button aria-label="Open photo gallery">
+          <img src="${firstPhoto}" alt="Rental photo" loading="lazy" />
         </button>
       </div>
 
-      <div style="display:grid;gap:6px;margin-top:12px;">
-        ${(listing.notes || []).slice(0, 4).map(n => `<div class="small">• ${escapeHtml(n)}</div>`).join("")}
-      </div>
-
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
-        <button class="btn" type="button" data-open="${escapeAttr(listing.id)}">View photos</button>
-        <button class="btn" type="button" data-copy="${escapeAttr(listing.id)}">Copy details</button>
-      </div>
-
-      <div class="small" style="margin-top:10px;">
-        ${listing.status === "demo"
-          ? "Demo: shown for UX only. Do not rely on availability."
-          : (rec.expired
-            ? "This entry is past the verification window; treat as unconfirmed until re-verified."
-            : "Verified entry: status reflects recent confirmation within the window shown.")
-        }
-      </div>
+      <span class="badge">${photos.length || 1} photo(s)</span>
     `;
 
     div.querySelector("button").onclick = () => openGallery(listing);
-    div.querySelector("[data-open]").onclick = () => openGallery(listing);
-
     cards.appendChild(div);
   });
 }
 
-/* ---------------------------
-   Copy details
-----------------------------*/
-document.addEventListener("click", async (e) => {
-  const btn = e.target.closest("[data-copy]");
-  if (!btn) return;
+function getListingsJsonPath(){
+  // If we're on /winnemucca/ use ./listings.json
+  // If we're on /winnemucca/<subpage>/ use ../listings.json
+  const p = (location.pathname || "").toLowerCase();
+  const inWinn = p.includes("/winnemucca/");
+  const isWinnRoot = p.endsWith("/winnemucca/");
 
-  const id = btn.getAttribute("data-copy");
-  const listing = listings.find(x => String(x.id) === String(id));
-  if (!listing) return;
+  if (inWinn && !isWinnRoot) return "../listings.json";
+  return "./listings.json";
+}
 
-  const rec = computeRecency(listing);
-  const effStatus = effectiveStatus(listing);
+async function loadListings(){
+  const jsonPath = getListingsJsonPath();
 
-  const lines = [
-    listing.address,
-    `Rent: ${fmtPrice(listing.rent)}`,
-    `Beds/Baths: ${bedsLabel(listing.beds)}, ${listing.baths} bath`,
-    `Status: ${statusLabel(effStatus)}`,
-    listing.status === "demo" ? `Verification: Not verified (demo)` : `Verification: ${rec.label}`,
-    `Notes: ${(listing.notes || []).join(" | ")}`
-  ].join("\n");
-
-  try {
-    await navigator.clipboard.writeText(lines);
-    btn.textContent = "Copied";
-    setTimeout(() => btn.textContent = "Copy details", 900);
-  } catch {
-    alert("Copy failed on this device. You can manually select and copy.");
+  try{
+    const res = await fetch(jsonPath, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed to load ${jsonPath} (${res.status})`);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error("listings.json is not an array");
+    listings = data;
+  }catch(err){
+    listings = [];
   }
-});
 
-/* ---------------------------
-   Apply filters
-----------------------------*/
-function apply(){
-  const f = getFilters();
-  const filtered = listings.filter(l => matchesFilters(l, f));
+  listings = listings.map(l => ({
+    ...l,
+    _status: normalizeStatus(l.status),
+    _verified: parseVerifiedAt(l.verifiedAt)
+  })).sort((a,b) => {
+    const av = a._verified ? a._verified.getTime() : 0;
+    const bv = b._verified ? b._verified.getTime() : 0;
+    if (av !== bv) return bv - av; // newest verified first
+    const sr = statusRank(a._status) - statusRank(b._status);
+    if (sr !== 0) return sr;
+    return Number(a.rent || 0) - Number(b.rent || 0);
+  });
+
+  const filtered = applyFilter(listings);
   renderCards(filtered);
 }
 
-if (qEl) qEl.addEventListener("input", apply);
-if (bedsEl) bedsEl.addEventListener("change", apply);
-if (maxPriceEl) maxPriceEl.addEventListener("change", apply);
-if (statusEl) statusEl.addEventListener("change", apply);
-
-if (clearBtn) {
-  clearBtn.addEventListener("click", () => {
-    if (qEl) qEl.value = "";
-    if (bedsEl) bedsEl.value = "";
-    if (maxPriceEl) maxPriceEl.value = "";
-    if (statusEl) statusEl.value = "";
-    apply();
-  });
-}
-
-/* ---------------------------
-   Helpers
-----------------------------*/
-function escapeHtml(str){
-  return String(str ?? "").replace(/[&<>"']/g, (m) => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-  }[m]));
-}
-function escapeAttr(str){ return escapeHtml(str); }
-
-/* init */
 loadListings();
