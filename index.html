@@ -4,26 +4,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="robots" content="index, follow">
-  <title>Local Rental Search | Verified Rental Availability (Winnemucca, NV)</title>
-  <meta name="description" content="Local Rental Search is a verification-first rental index. We publish only listings with recent confirmation and clear status to reduce dead listings. Start with Winnemucca, NV." />
+
+  <title>Local Rental Search | Verified Availability by Town</title>
+  <meta name="description" content="Local Rental Search is building town-by-town rental availability indexes with verification signals so renters stop chasing outdated listings." />
   <link rel="canonical" href="https://localrentalsearch.com/" />
 
-  <meta property="og:title" content="Local Rental Search | Verified Rental Availability" />
-  <meta property="og:description" content="Verification-first rental index with clear status and recent confirmation to reduce dead listings. Start with Winnemucca, NV." />
-  <meta property="og:type" content="website" />
-
   <link rel="stylesheet" href="./assets/style.css" />
-
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"Local Rental Search",
-    "url":"https://localrentalsearch.com/",
-    "description":"Verification-first rental index with clear status and recent confirmation to reduce dead listings.",
-    "inLanguage":"en"
-  }
-  </script>
 </head>
 
 <body>
@@ -31,13 +17,13 @@
 <div class="nav">
   <div class="container nav-inner">
     <div class="brand">
-      <div class="logo" aria-hidden="true"></div>
+      <div class="logo"></div>
       <a href="./">Local Rental Search</a>
     </div>
     <div class="nav-links">
       <a class="pill" href="./winnemucca/">Winnemucca</a>
-      <a class="pill" href="#how">How it works</a>
-      <a class="pill" href="#contact">Contact</a>
+      <a class="pill" href="#owners">Owners & Managers</a>
+      <a class="pill" href="#about">About</a>
     </div>
   </div>
 </div>
@@ -45,63 +31,57 @@
 <header class="hero">
   <div class="container">
     <div class="card pad">
-      <span class="badge">Verification-first • Clear status • Fewer dead listings</span>
-
-      <h1>Verified Rental Availability by Town</h1>
-
+      <span class="badge badge-verified">Verified availability signals • Town-by-town</span>
+      <h1>Stop Chasing Dead Listings</h1>
       <p class="lead">
-        Local Rental Search is built to solve a simple local problem: rental listings go stale fast.
-        We publish listings with <strong>recent confirmation</strong>, clear status labels, and auto-expiring entries
-        so renters waste less time chasing units that are already filled.
+        Most rentals go “stale” fast—especially in small markets. Local Rental Search is built around a simple idea:
+        show availability with clear status and verification timestamps.
       </p>
 
-      <div class="hr"></div>
-
-      <h2 style="margin-top:0;">Start Here</h2>
-      <p class="lead">Current coverage:</p>
-      <div style="display:flex;gap:10px;flex-wrap:wrap;">
-        <a class="pill" href="./winnemucca/">Winnemucca, NV</a>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+        <a class="btn btn-primary" href="./winnemucca/">Browse Winnemucca</a>
+        <a class="btn btn-ghost" href="#owners">List a Property</a>
       </div>
 
       <div class="hr"></div>
 
-      <div id="how">
-        <h2>How it works</h2>
-        <ul>
-          <li><strong>We collect rental leads</strong> from local sources and normalize the details.</li>
-          <li><strong>We confirm availability</strong> and publish a status + timestamp.</li>
-          <li><strong>Listings expire</strong> if they are not re-confirmed within a set window.</li>
-        </ul>
-        <p class="muted">
-          We use AI internally to speed up data cleanup (extracting price, beds, pet policy) and to draft outreach messages,
-          but the site’s public promise is straightforward: clear status and recency.
-        </p>
+      <div class="grid grid-2">
+        <div class="callout">
+          <h2 style="margin-top:0;">For Renters</h2>
+          <div class="stack">
+            <div class="kv">
+              <div class="k">What you get</div>
+              <div class="v">Clear status + “Verified” timestamps</div>
+            </div>
+            <p class="lead" style="margin:0;">
+              Instead of scrolling posts and guessing, you can filter quickly and prioritize listings verified recently.
+            </p>
+          </div>
+        </div>
 
-        <span class="badge">Demo phase • Verification workflow launching town-by-town</span>
+        <div class="callout" id="owners">
+          <h2 style="margin-top:0;">For Owners & Managers</h2>
+          <p class="lead">
+            You should not have to “manage another platform.” We keep updates lightweight—simple confirmations that
+            instantly update the public listing.
+          </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;">
+            <a class="btn" href="./winnemucca/#owners">How listing works</a>
+            <a class="btn" href="mailto:list@localrentalsearch.com?subject=Winnemucca%20Listing%20Request">Request a listing</a>
+          </div>
+          <p class="muted" style="margin-top:10px;margin-bottom:0;">
+            Early onboarding is free while we finalize the verification workflow.
+          </p>
+        </div>
       </div>
 
       <div class="hr"></div>
 
-      <div>
-        <h2>What we are (and are not)</h2>
-        <ul>
-          <li><strong>We are:</strong> an availability index and discovery layer.</li>
-          <li><strong>We are not:</strong> a property manager, broker, or payment processor.</li>
-          <li><strong>We do not</strong> collect application fees, deposits, or rent.</li>
-        </ul>
-      </div>
-
-      <div class="hr"></div>
-
-      <div id="contact">
-        <h2>Contact</h2>
+      <div id="about">
+        <h2>Why this exists</h2>
         <p class="lead">
-          Have a listing to add, update, or remove?
-        </p>
-        <span class="badge">Email: <a href="mailto:listings@localrentalsearch.com">listings@localrentalsearch.com</a></span>
-        <p class="muted" style="margin-top:10px;">
-          If you are a renter: include your target price, bed count, pet needs, and move-in timeframe.
-          If you are listing: include rent, deposit, policies, and photos.
+          Winnemucca is the pilot market. The long-term goal is to build the most trusted, most current rental index
+          town-by-town—so renters and property teams spend less time on noise.
         </p>
       </div>
 
