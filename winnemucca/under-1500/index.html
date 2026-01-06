@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <title>Winnemucca Rentals Under $1500 | Live Availability | LocalRentalSearch.com</title>
+  <meta name="description" content="Winnemucca, NV rentals under $1500 per month with live availability and verification timestamps." />
+  <link rel="canonical" href="https://localrentalsearch.com/winnemucca/under-1500/" />
+
+  <link rel="stylesheet" href="../../assets/style.css" />
+</head>
+
+<body>
+
+<div class="nav">
+  <div class="container nav-inner">
+    <div class="brand">
+      <div class="logo"></div>
+      <a href="../../">Local Rental Search</a>
+    </div>
+    <div class="nav-links">
+      <a class="pill" href="../">Winnemucca</a>
+      <a class="pill" href="../verified-today/">Verified Today</a>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="container">
+    <div class="card pad">
+      <span class="badge">Winnemucca, NV • Under $1500</span>
+      <h1>Rentals Under $1500</h1>
+      <p class="lead">
+        Rentals priced under $1500 filtered from the Winnemucca availability index.
+      </p>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="section">
+    <div class="card pad">
+      <div id="cards"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="hr"></div>
+    <div>© <span id="yr"></span> Local Rental Search</div>
+  </footer>
+</main>
+
+<!-- GALLERY MODAL -->
+<div class="modal" id="galleryModal">
+  <div class="modal-inner">
+    <div class="modal-top">
+      <strong id="modalTitle">Photos</strong>
+      <div class="modal-close" id="modalClose">X</div>
+    </div>
+    <div class="modal-stage">
+      <img id="modalImg" />
+    </div>
+    <div class="modal-nav">
+      <button class="modal-btn" id="prevBtn">Prev</button>
+      <div class="modal-counter" id="modalCounter">1 / 1</div>
+      <button class="modal-btn" id="nextBtn">Next</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.LRS_FILTER = { maxRent: 1500 };
+</script>
+<script src="../listings.js"></script>
+
+</body>
+</html>
