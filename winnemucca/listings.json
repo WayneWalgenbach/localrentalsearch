@@ -1,18 +1,18 @@
 [
   {
     "id": "winn-demo-001",
-    "status": "available",
+    "status": "pending",
     "unit": "#12",
     "beds": 1,
     "baths": 1,
     "rent": 1400,
-    "address": "Example Apartment — Winnemucca, NV",
+    "address": "Example Apartment ? Winnemucca, NV",
     "notes": [
       "Demo listing (for onboarding demos)",
       "Deposit: Demo",
       "Pets: Demo"
     ],
-    "verifiedAt": "2026-01-05T00:00:00Z",
+    "verifiedAt": "2026-01-06T05:06:06.219Z",
     "expiresHours": 72,
     "contactEmail": "wmw13foxtrot@gmail.com",
     "verificationKey": "winn-demo-001-a9f3kq",
@@ -20,16 +20,18 @@
       "https://picsum.photos/seed/winn1/1200/800",
       "https://picsum.photos/seed/winn2/1200/800",
       "https://picsum.photos/seed/winn3/1200/800"
-    ]
+    ],
+    "nudgeSentAt": null,
+    "expiredDowngradedAt": null
   },
   {
     "id": "winn-verified-001",
     "status": "available",
-    "unit": "—",
+    "unit": "?",
     "beds": 2,
     "baths": 1,
     "rent": 1600,
-    "address": "Sample Verified Listing — Winnemucca, NV (Example)",
+    "address": "Sample Verified Listing ? Winnemucca, NV (Example)",
     "notes": [
       "Verified example entry",
       "Pets: Ask",
