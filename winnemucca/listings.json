@@ -1,59 +1,60 @@
-[
-  {
-    "id": "winn-demo-001",
-    "propertyType": "apartment",
-    "status": "available",
-    "verifiedAt": null,
-    "address": "Demo Apartment A — Winnemucca, NV",
-    "unit": "#12",
-    "beds": 1,
-    "baths": 1,
-    "rent": 1400,
-    "leaseTerm": "12 months",
-    "pets": "No pets",
-    "managerName": "Demo Manager (wmw)",
-    "photos": [
-      "https://picsum.photos/seed/winnA1/1200/800",
-      "https://picsum.photos/seed/winnA2/1200/800",
-      "https://picsum.photos/seed/winnA3/1200/800"
-    ]
-  },
-  {
-    "id": "winn-demo-002",
-    "propertyType": "apartment",
-    "status": "pending",
-    "verifiedAt": null,
-    "address": "Demo Apartment B — Winnemucca, NV",
-    "unit": "#3B",
-    "beds": 2,
-    "baths": 1,
-    "rent": 1650,
-    "leaseTerm": "6–12 months",
-    "pets": "Cats ok",
-    "managerName": "Demo Manager (wmw)",
-    "photos": [
-      "https://picsum.photos/seed/winnB1/1200/800",
-      "https://picsum.photos/seed/winnB2/1200/800",
-      "https://picsum.photos/seed/winnB3/1200/800"
-    ]
-  },
-  {
-    "id": "winn-demo-003",
-    "propertyType": "house",
-    "status": "filled",
-    "verifiedAt": null,
-    "address": "Demo House — Winnemucca, NV",
-    "unit": "N/A",
-    "beds": 3,
-    "baths": 2,
-    "rent": 2100,
-    "leaseTerm": "12 months",
-    "pets": "Small dogs ok",
-    "managerName": "Demo Manager (mrnic5guy)",
-    "photos": [
-      "https://picsum.photos/seed/winnC1/1200/800",
-      "https://picsum.photos/seed/winnC2/1200/800",
-      "https://picsum.photos/seed/winnC3/1200/800"
-    ]
-  }
-]
+{
+  "town": "Winnemucca, NV",
+  "updatedAt": "2026-01-06",
+  "listings": [
+    {
+      "id": "winn-demo-001",
+      "title": "Demo Apartment A — Winnemucca, NV",
+      "type": "apartment",
+      "beds": 1,
+      "baths": 1,
+      "rent": 1400,
+      "unit": "#12",
+      "status": "available",
+      "lastVerified": "2026-01-06",
+      "managerEmail": "wmw13foxtrot@gmail.com",
+      "contactEmail": "wmw13foxtrot@gmail.com",
+      "photos": [
+        "https://picsum.photos/seed/winnA1/1200/800",
+        "https://picsum.photos/seed/winnA2/1200/800",
+        "https://picsum.photos/seed/winnA3/1200/800"
+      ]
+    },
+    {
+      "id": "winn-demo-002",
+      "title": "Demo Apartment B — Winnemucca, NV",
+      "type": "apartment",
+      "beds": 2,
+      "baths": 1,
+      "rent": 1650,
+      "unit": "#3B",
+      "status": "pending",
+      "lastVerified": "2026-01-05",
+      "managerEmail": "wmw13foxtrot@gmail.com",
+      "contactEmail": "wmw13foxtrot@gmail.com",
+      "photos": [
+        "https://picsum.photos/seed/winnB1/1200/800",
+        "https://picsum.photos/seed/winnB2/1200/800",
+        "https://picsum.photos/seed/winnB3/1200/800"
+      ]
+    },
+    {
+      "id": "winn-demo-003",
+      "title": "Demo House C — Winnemucca, NV",
+      "type": "house",
+      "beds": 2,
+      "baths": 1,
+      "rent": 1500,
+      "unit": "—",
+      "status": "filled",
+      "lastVerified": "2026-01-04",
+      "managerEmail": "mrnic5guy@gmail.com",
+      "contactEmail": "mrnic5guy@gmail.com",
+      "photos": [
+        "https://picsum.photos/seed/winnC1/1200/800",
+        "https://picsum.photos/seed/winnC2/1200/800",
+        "https://picsum.photos/seed/winnC3/1200/800"
+      ]
+    }
+  ]
+}
